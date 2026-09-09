@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Family Health Record</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper: #EFE8D8;
+    --paper-light: #FAF7EE;
+    --ink: #2A251E;
+    --ink-soft: #7A7061;
+    --line: #DDD1B4;
+    --teal: #2E4A52;
+    --teal-dark: #21363C;
+    --teal-tint: #DDE6E4;
+
+    --illness: #AD4C4C;
+    --illness-bg: #F2E0DC;
+    --appt: #B47F26;
+    --appt-bg: #F3E5C4;
+    --med: #5B7A45;
+    --med-bg: #E2E8D2;
+    --vax: #3D7089;
+    --vax-bg: #DAE7EB;
+
+    --radius: 10px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  html, body{ height: 100%; margin: 0; }
+  #fht-root, #fht-root *{ box-sizing: border-box; }
+
+  #fht-root{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 0 0 48px 0;
+  }
+
+  #fht-root h1, #fht-root h2, #fht-root h3{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  #fht-root button{ font-family: inherit; }
+  #fht-root input, #fht-root select, #fht-root textarea{ font-family: inherit; font-size: 14.5px; }
+
+  #fht-root :focus-visible{
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+  }
+
+  .fht-btn{
+    border: 1px solid var(--line);
+    background: var(--paper-light);
+    color: var(--ink);
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .fht-btn:hover{ border-color: var(--ink-soft); }
+  .fht-btn-primary{
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--paper-light);
+  }
+  .fht-btn-primary:hover{ background: var(--teal-dark); }
+  .fht-btn-primary:disabled{ opacity: 0.5; cursor: not-allowed; }
+  .fht-btn-text{
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    padding: 6px 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+  .fht-btn-text:hover{ color: var(--ink); }
+  .fht-btn-danger{ color: var(--illness); }
+
+  /* ---------- Gate / Onboarding ---------- */
+  .fht-onboard-wrap{
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 64px 20px;
+  }
+  .fht-onboard-card{
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 36px 32px;
+  }
+  .fht-onboard-card h1{ font-size: 26px; margin-bottom: 8px; }
+  .fht-onboard-card p.fht-sub{ color: var(--ink-soft); margin: 0 0 26px 0; font-size: 14.5px; }
+  .fht-field{ margin-bottom: 18px; }
+  .fht-field label{ display:block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--ink-soft); }
+  .fht-field input[type=text], .fht-field input[type=date], .fht-field select, .fht-field textarea{
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .fht-field textarea{ resize: vertical; min-height: 60px; }
+
+  .fht-choice-row{ display:flex; gap: 14px; margin-bottom: 8px; }
+  .fht-choice{
+    flex: 1;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px 16px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .fht-choice:hover{ border-color: var(--teal); }
+  .fht-choice h3{ font-size: 16px; margin-bottom: 6px; }
+  .fht-choice p{ font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+  .fht-code-display{
+    display:flex; align-items:center; gap: 10px;
+    background: var(--teal-tint); border-radius: 10px; padding: 14px 16px; margin: 14px 0 20px 0;
+  }
+  .fht-code-display .fht-code{
+    font-family: 'Fraunces', serif; font-size: 22px; letter-spacing: 2px; font-weight: 600; color: var(--teal-dark);
+  }
+
+  .fht-member-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .fht-member-row input[type=text]{ flex: 1; }
+  .fht-swatch-row{ display:flex; gap: 6px; }
+  .fht-swatch{
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+  .fht-swatch.selected{ border-color: var(--ink); }
+  .fht-remove-row{
+    border: none; background: transparent; color: var(--ink-soft);
+    cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 6px;
+  }
+  .fht-remove-row:hover{ color: var(--illness); }
+  .fht-error{ color: var(--illness); font-size: 13px; margin: 4px 0 0 0; }
+  .fht-note{ color: var(--ink-soft); font-size: 12.5px; margin-top: 6px; }
+
+  /* ---------- Header ---------- */
+  .fht-header{
+    background: var(--paper-light);
+    border-bottom: 1px solid var(--line);
+    padding: 22px 32px 18px 32px;
+  }
+  .fht-header-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 1180px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  .fht-header-top h1{ font-size: 25px; }
+  .fht-header-top .fht-tag{ color: var(--ink-soft); font-size: 13.5px; margin-top: 4px; }
+  .fht-header-top .fht-tag button{ border:none; background:none; color:var(--teal); cursor:pointer; font-weight:600; font-size:12.5px; padding:0; margin-left: 8px; }
+  .fht-header-actions{ display:flex; gap: 10px; }
+
+  .fht-pills{
+    max-width: 1180px;
+    margin: 16px auto 0 auto;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+  .fht-pill{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--line);
+    background: var(--paper-light);
+    padding: 6px 13px 6px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .fht-pill .fht-dot{ width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .fht-pill.active{ background: var(--teal); color: var(--paper-light); border-color: var(--teal); }
+  .fht-pill.active .fht-dot{ box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
+
+  /* ---------- Stats ledger ---------- */
+  .fht-stats{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px 32px 0 32px;
+    display: flex;
+  }
+  .fht-stat{
+    flex: 1;
+    padding: 0 22px;
+    border-left: 1px solid var(--line);
+  }
+  .fht-stat:first-child{ border-left: none; padding-left: 0; }
+  .fht-stat .fht-num{ font-family: 'Fraunces', serif; font-size: 30px; font-weight: 600; display:block; line-height:1; }
+  .fht-stat .fht-lbl{ color: var(--ink-soft); font-size: 12.5px; margin-top: 6px; display:block; }
+
+  /* ---------- Main grid ---------- */
+  .fht-main{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 32px 0 32px;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 36px;
+  }
+  @media (max-width: 900px){
+    .fht-main{ grid-template-columns: 1fr; }
+    .fht-stats{ flex-wrap: wrap; }
+    .fht-stat{ flex: 1 1 45%; border-left: none; padding-left: 0; margin-bottom: 14px; }
+    .fht-choice-row{ flex-direction: column; }
+  }
+
+  .fht-section-head{
+    display:flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .fht-section-head h2{ font-size: 15px; font-weight: 600; color: var(--ink-soft); font-family:'Inter',sans-serif; }
+
+  .fht-month-head{
+    font-size: 13px; font-weight: 700; color: var(--ink-soft);
+    margin: 22px 0 8px 0; display:flex; align-items:center; gap:10px;
+  }
+  .fht-month-head:first-child{ margin-top: 0; }
+  .fht-month-head::after{ content:''; flex:1; height:1px; background: var(--line); }
+
+  .fht-entry{
+    display:flex;
+    gap: 12px;
+    padding: 12px 10px 12px 14px;
+    border-left: 3px solid var(--type-color, var(--line));
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+  }
+  .fht-entry:hover{ background: var(--paper-light); }
+  .fht-entry .fht-shape{ font-size: 13px; color: var(--type-color); margin-top: 3px; flex-shrink:0; }
+  .fht-entry-body{ flex: 1; min-width: 0; }
+  .fht-entry-top{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .fht-entry-title{ font-weight: 600; }
+  .fht-chip{ display:inline-flex; align-items:center; gap:5px; font-size:12.5px; color: var(--ink-soft); }
+  .fht-chip .fht-dot{ width:7px; height:7px; border-radius:50%; }
+  .fht-entry-date{ margin-left: auto; font-size: 12.5px; color: var(--ink-soft); }
+  .fht-entry-detail{ font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+  .fht-entry-notes{ font-size: 13px; color: var(--ink-soft); margin-top: 2px; font-style: italic; }
+  .fht-entry-del{
+    background: transparent; border: none; color: var(--ink-soft);
+    font-size: 12px; font-weight: 700; cursor: pointer; padding: 4px 8px;
+    border-radius: 6px; align-self: flex-start; flex-shrink: 0;
+  }
+  .fht-entry-del:hover{ background: var(--illness-bg); color: var(--illness); }
+
+  .fht-empty{
+    color: var(--ink-soft);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 26px;
+    font-size: 14px;
+  }
+
+  .fht-panel{
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+  .fht-legend{ display:flex; flex-wrap:wrap; gap: 12px; margin-top: 10px; }
+  .fht-legend-item{ display:flex; align-items:center; gap:6px; font-size: 12.5px; color: var(--ink-soft); }
+  .fht-legend-item .fht-dot{ width:8px; height:8px; border-radius:2px; }
+
+  .fht-remind-item{
+    display:flex; justify-content: space-between; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .fht-remind-item:last-child{ border-bottom: none; }
+  .fht-remind-item .fht-r-date{ color: var(--ink-soft); font-size: 12.5px; white-space:nowrap; }
+
+  /* ---------- Modal ---------- */
+  .fht-overlay{
+    position: fixed; inset: 0; background: rgba(30,26,20,0.45);
+    display:flex; align-items:center; justify-content:center;
+    padding: 20px; z-index: 1000;
+  }
+  .fht-modal{
+    background: var(--paper-light);
+    border-radius: 16px;
+    padding: 28px 28px 22px 28px;
+    max-width: 480px; width: 100%;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .fht-modal h2{ font-size: 20px; margin-bottom: 18px; }
+  .fht-type-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 20px; }
+  .fht-type-opt{
+    border: 1px solid var(--line); background: #fff; border-radius: 10px;
+    padding: 10px 6px; text-align:center; cursor:pointer; font-size: 12px; font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .fht-type-opt .fht-shape{ display:block; font-size: 16px; margin-bottom: 4px; }
+  .fht-type-opt.selected{ border-color: var(--type-color); background: var(--type-bg); color: var(--type-color); }
+  .fht-modal-actions{ display:flex; align-items:center; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+  .fht-modal-actions .fht-left{ margin-right: auto; }
+
+  .fht-people-list{ margin-bottom: 16px; }
+  .fht-people-row{ display:flex; align-items:center; gap:10px; margin-bottom: 10px; }
+  .fht-people-row input[type=text]{ flex:1; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; }
+
+  .fht-loading{ padding: 80px 20px; text-align:center; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div id="fht-root"><div class="fht-loading">Loading your family's record…</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc,
+  collection, addDoc, deleteDoc, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+/* =========================================================
+   1. PASTE YOUR FIREBASE CONFIG HERE (see README.md)
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyClqZqIZ7DpvW11ZHEC7HPZRBfidFkXe1c",
+  authDomain: "family-health-arbow-31b09.firebaseapp.com",
+  projectId: "family-health-arbow-31b09",
+  storageBucket: "family-health-arbow-31b09.firebasestorage.app",
+  messagingSenderId: "15898977812",
+  appId: "1:15898977812:web:aca1711c7aa49ddecb6901"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+(function(){
+  const root = document.getElementById('fht-root');
+  const CODE_KEY = 'fht-family-code';
+
+  const PALETTE = ['#AD4C4C','#B47F26','#5B7A45','#3D7089','#7A5C8F','#3E5C7A','#946B3D','#4C7A6A'];
+
+  const TYPE_CONFIG = {
+    illness:     { label:'Illness',     shape:'●', color:'var(--illness)', bg:'var(--illness-bg)', hex:'#AD4C4C',
+                   titlePh:'e.g. Fever, Ear infection',
+                   d1Label:'Severity', d1Type:'select', d1Options:['Mild','Moderate','Severe'],
+                   d2Label:'Resolved on (leave blank if ongoing)', d2Type:'date' },
+    appointment: { label:'Appointment', shape:'◆', color:'var(--appt)', bg:'var(--appt-bg)', hex:'#B47F26',
+                   titlePh:'e.g. Pediatrician checkup',
+                   d1Label:'Provider', d1Type:'text',
+                   d2Label:'Follow-up needed by', d2Type:'date' },
+    medication:  { label:'Medication',  shape:'■', color:'var(--med)', bg:'var(--med-bg)', hex:'#5B7A45',
+                   titlePh:'e.g. Amoxicillin',
+                   d1Label:'Dosage', d1Type:'text',
+                   d2Label:'Stop date (leave blank if ongoing)', d2Type:'date' },
+    vaccine:     { label:'Vaccine',     shape:'▲', color:'var(--vax)', bg:'var(--vax-bg)', hex:'#3D7089',
+                   titlePh:'e.g. Flu shot',
+                   d1Label:'Given by', d1Type:'text',
+                   d2Label:'Next dose due', d2Type:'date' },
+  };
+
+  let state = { code: null, household: null, events: [], activeFilter: 'all' };
+  let modalState = null;
+  let modalDeleteArm = false;
+  let peopleDraft = null;
+  let onboardDraft = null;
+  let charts = { monthly: null, second: null };
+  let unsubHousehold = null, unsubEvents = null;
+
+  function uidLocal(){ return 'tmp-' + Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+  function todayISO(){ return new Date().toISOString().slice(0,10); }
+  function startOfToday(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+  function fmtDate(iso){
+    if(!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+  }
+  function fmtMonthHead(iso){
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+  }
+  function getMember(id){
+    const m = state.household.members.find(x=>x.id===id);
+    return m || { id, name:'Former member', color:'#9C9285' };
+  }
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function generateCode(){
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let out=''; for(let i=0;i<8;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+    return out;
+  }
+
+  /* ---------------- Firestore helpers ---------------- */
+  function householdRef(code){ return doc(db, 'households', code); }
+  function eventsRef(code){ return collection(db, 'households', code, 'events'); }
+  function eventRef(code, id){ return doc(db, 'households', code, 'events', id); }
+
+  async function createHousehold(code, householdData){
+    await setDoc(householdRef(code), householdData);
+  }
+  async function saveHouseholdRemote(){
+    await setDoc(householdRef(state.code), state.household, { merge: true });
+  }
+  async function addEventRemote(fields){
+    await addDoc(eventsRef(state.code), { ...fields, createdAt: Date.now() });
+  }
+  async function updateEventRemote(id, fields){
+    await updateDoc(eventRef(state.code, id), fields);
+  }
+  async function deleteEventRemote(id){
+    await deleteDoc(eventRef(state.code, id));
+  }
+
+  function startListening(){
+    if(unsubHousehold) unsubHousehold();
+    if(unsubEvents) unsubEvents();
+    unsubHousehold = onSnapshot(householdRef(state.code), snap=>{
+      if(!snap.exists()){
+        state.household = null;
+        localStorage.removeItem(CODE_KEY);
+        renderGate('missing');
+        return;
+      }
+      state.household = snap.data();
+      if(state.activeFilter!=='all' && !state.household.members.find(m=>m.id===state.activeFilter)){
+        state.activeFilter = 'all';
+      }
+      renderApp();
+    }, err=>{
+      console.error(err);
+      renderGate('error');
+    });
+    unsubEvents = onSnapshot(eventsRef(state.code), snap=>{
+      state.events = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+      if(state.household) renderApp();
+    }, err=>console.error(err));
+  }
+
+  function switchFamily(){
+    if(unsubHousehold) unsubHousehold();
+    if(unsubEvents) unsubEvents();
+    localStorage.removeItem(CODE_KEY);
+    state = { code:null, household:null, events:[], activeFilter:'all' };
+    renderGate();
+  }
+
+  /* ---------------- Gate: create or join ---------------- */
+  function renderGate(mode){
+    if(mode==='missing'){
+      root.innerHTML = `
+        <div class="fht-onboard-wrap"><div class="fht-onboard-card">
+          <h1>We couldn't find that family</h1>
+          <p class="fht-sub">The family code saved on this device doesn't match a record anymore.</p>
+          <button class="fht-btn fht-btn-primary" id="fht-gate-restart">Start over</button>
+        </div></div>`;
+      document.getElementById('fht-gate-restart').addEventListener('click', ()=>{ localStorage.removeItem(CODE_KEY); renderGate(); });
+      return;
+    }
+    if(mode==='error'){
+      root.innerHTML = `
+        <div class="fht-onboard-wrap"><div class="fht-onboard-card">
+          <h1>Couldn't connect</h1>
+          <p class="fht-sub">Check that the Firebase config at the top of index.html has been filled in, and that Firestore rules allow access. See README.md.</p>
+        </div></div>`;
+      return;
+    }
+    root.innerHTML = `
+      <div class="fht-onboard-wrap">
+        <div class="fht-onboard-card">
+          <h1>Family Health Record</h1>
+          <p class="fht-sub">Track illnesses, appointments, medications and vaccines for your household — synced across every family member's device.</p>
+          <div class="fht-choice-row">
+            <button class="fht-choice" id="fht-gate-create" type="button">
+              <h3>Start a new family record</h3>
+              <p>You'll get a family code to share with the rest of your household.</p>
+            </button>
+            <button class="fht-choice" id="fht-gate-join" type="button">
+              <h3>Join an existing family</h3>
+              <p>Enter the family code someone in your household already has.</p>
+            </button>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('fht-gate-create').addEventListener('click', renderOnboarding);
+    document.getElementById('fht-gate-join').addEventListener('click', renderJoin);
+  }
+
+  function renderJoin(){
+    root.innerHTML = `
+      <div class="fht-onboard-wrap"><div class="fht-onboard-card">
+        <h1>Join your family's record</h1>
+        <p class="fht-sub">Enter the family code shared with you.</p>
+        <div class="fht-field">
+          <label for="fht-join-code">Family code</label>
+          <input type="text" id="fht-join-code" placeholder="e.g. 7F3KQ9XM" style="text-transform:uppercase; letter-spacing:1px;" />
+        </div>
+        <p class="fht-error" id="fht-join-error" style="display:none;"></p>
+        <div style="display:flex; gap:10px;">
+          <button class="fht-btn" id="fht-join-back">Back</button>
+          <button class="fht-btn fht-btn-primary" id="fht-join-submit">Join</button>
+        </div>
+      </div></div>`;
+    document.getElementById('fht-join-back').addEventListener('click', ()=>renderGate());
+    document.getElementById('fht-join-submit').addEventListener('click', async ()=>{
+      const input = document.getElementById('fht-join-code');
+      const errEl = document.getElementById('fht-join-error');
+      const code = input.value.trim().toUpperCase();
+      if(!code){ errEl.textContent = 'Please enter a family code.'; errEl.style.display='block'; return; }
+      try{
+        const snap = await getDoc(householdRef(code));
+        if(!snap.exists()){
+          errEl.textContent = "We couldn't find a family with that code. Double-check it and try again.";
+          errEl.style.display = 'block';
+          return;
+        }
+        state.code = code;
+        localStorage.setItem(CODE_KEY, code);
+        root.innerHTML = `<div class="fht-loading">Joining your family's record…</div>`;
+        startListening();
+      } catch(e){
+        console.error(e);
+        errEl.textContent = 'Something went wrong connecting to the database. See README.md for setup steps.';
+        errEl.style.display = 'block';
+      }
+    });
+  }
+
+  /* ---------------- Onboarding (create new family) ---------------- */
+  function renderOnboarding(){
+    if(!onboardDraft){
+      onboardDraft = {
+        code: generateCode(),
+        name: '',
+        members: [ {name:'', color:PALETTE[0]}, {name:'', color:PALETTE[1]} ]
+      };
+    }
+    const d = onboardDraft;
+    root.innerHTML = `
+      <div class="fht-onboard-wrap">
+        <div class="fht-onboard-card">
+          <h1>Set up your family's health record</h1>
+          <p class="fht-sub">Give your household a name and add the people you'll be tracking.</p>
+          <div class="fht-code-display">
+            <span class="fht-code">${d.code}</span>
+            <span style="color:var(--ink-soft); font-size:12.5px;">This is your family code — share it with your household so they can join.</span>
+          </div>
+          <div class="fht-field">
+            <label for="fht-ob-name">Household name</label>
+            <input type="text" id="fht-ob-name" placeholder="e.g. The Alvarez Family" value="${esc(d.name)}" />
+          </div>
+          <div class="fht-field">
+            <label>Family members</label>
+            <div id="fht-ob-members"></div>
+            <button class="fht-btn-text" id="fht-ob-add" type="button">+ Add another person</button>
+          </div>
+          <p class="fht-error" id="fht-ob-error" style="display:none;"></p>
+          <div style="margin-top:22px; display:flex; gap:10px;">
+            <button class="fht-btn" id="fht-ob-back">Back</button>
+            <button class="fht-btn fht-btn-primary" id="fht-ob-submit" type="button">Start tracking</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const membersWrap = document.getElementById('fht-ob-members');
+    function renderMemberRows(){
+      membersWrap.innerHTML = d.members.map((m,i)=>`
+        <div class="fht-member-row">
+          <input type="text" data-idx="${i}" class="fht-ob-mname" placeholder="Name" value="${esc(m.name)}" />
+          <div class="fht-swatch-row" data-idx="${i}">
+            ${PALETTE.map(c=>`<button type="button" class="fht-swatch ${m.color===c?'selected':''}" style="background:${c}" data-color="${c}" data-idx="${i}"></button>`).join('')}
+          </div>
+          ${d.members.length>2 ? `<button type="button" class="fht-remove-row" data-idx="${i}" title="Remove">&times;</button>` : ''}
+        </div>
+      `).join('');
+      membersWrap.querySelectorAll('.fht-ob-mname').forEach(inp=>{
+        inp.addEventListener('input', e=>{ d.members[+e.target.dataset.idx].name = e.target.value; });
+      });
+      membersWrap.querySelectorAll('.fht-swatch').forEach(sw=>{
+        sw.addEventListener('click', e=>{
+          d.members[+e.target.dataset.idx].color = e.target.dataset.color;
+          renderMemberRows();
+        });
+      });
+      membersWrap.querySelectorAll('.fht-remove-row').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          d.members.splice(+e.target.dataset.idx,1);
+          renderMemberRows();
+        });
+      });
+    }
+    renderMemberRows();
+    document.getElementById('fht-ob-name').addEventListener('input', e=>{ d.name = e.target.value; });
+    document.getElementById('fht-ob-add').addEventListener('click', ()=>{
+      if(d.members.length>=8) return;
+      d.members.push({ name:'', color: PALETTE[d.members.length % PALETTE.length] });
+      renderMemberRows();
+    });
+    document.getElementById('fht-ob-back').addEventListener('click', ()=>{ onboardDraft = null; renderGate(); });
+    document.getElementById('fht-ob-submit').addEventListener('click', async ()=>{
+      const errEl = document.getElementById('fht-ob-error');
+      const name = d.name.trim();
+      const names = d.members.map(m=>m.name.trim());
+      if(!name || names.some(n=>!n)){
+        errEl.textContent = 'Please add a household name and a name for every person.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const household = {
+        name,
+        members: d.members.map(m=>({ id: uidLocal(), name: m.name.trim(), color: m.color }))
+      };
+      try{
+        await createHousehold(d.code, household);
+        state.code = d.code;
+        localStorage.setItem(CODE_KEY, d.code);
+        onboardDraft = null;
+        root.innerHTML = `<div class="fht-loading">Setting things up…</div>`;
+        startListening();
+      } catch(e){
+        console.error(e);
+        errEl.textContent = 'Could not reach the database. Check your Firebase config and Firestore rules (see README.md).';
+        errEl.style.display = 'block';
+      }
+    });
+  }
+
+  /* ---------------- Stats / derived data ---------------- */
+  function isOngoing(e){
+    if(e.type!=='illness' && e.type!=='medication') return false;
+    if(!e.detail2) return true;
+    return new Date(e.detail2+'T00:00:00') >= startOfToday();
+  }
+  function getReminders(events){
+    const items = [];
+    events.forEach(e=>{
+      if(e.type==='appointment' && new Date(e.date+'T00:00:00') >= startOfToday()){
+        items.push({ date:e.date, label:e.title, sub:'Appointment', memberId:e.memberId });
+      }
+      if(e.type==='vaccine' && e.detail2 && new Date(e.detail2+'T00:00:00') >= startOfToday()){
+        items.push({ date:e.detail2, label:e.title+' — next dose', sub:'Vaccine due', memberId:e.memberId });
+      }
+    });
+    items.sort((a,b)=> new Date(a.date) - new Date(b.date));
+    return items;
+  }
+  function computeStats(events){
+    const now = new Date();
+    const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endMonth = new Date(now.getFullYear(), now.getMonth()+1, 1);
+    const thisMonth = events.filter(e=>{
+      const d = new Date(e.date+'T00:00:00');
+      return d >= startMonth && d < endMonth;
+    }).length;
+    const active = events.filter(isOngoing).length;
+    const upcoming = getReminders(events).length;
+    return { thisMonth, active, upcoming, members: state.household.members.length };
+  }
+
+  /* ---------------- Main app render ---------------- */
+  function renderApp(){
+    const filtered = state.activeFilter==='all'
+      ? state.events
+      : state.events.filter(e=>e.memberId===state.activeFilter);
+    const stats = computeStats(filtered);
+
+    root.innerHTML = `
+      <div class="fht-header">
+        <div class="fht-header-top">
+          <div>
+            <h1>${esc(state.household.name)}</h1>
+            <div class="fht-tag">Family code: ${state.code} <button id="fht-copy-code" type="button">Copy</button><button id="fht-switch" type="button">Switch family</button></div>
+          </div>
+          <div class="fht-header-actions">
+            <button class="fht-btn" id="fht-btn-people">People</button>
+            <button class="fht-btn fht-btn-primary" id="fht-btn-add">+ Log event</button>
+          </div>
+        </div>
+        <div class="fht-pills" id="fht-pills"></div>
+      </div>
+
+      <div class="fht-stats">
+        <div class="fht-stat"><span class="fht-num">${stats.thisMonth}</span><span class="fht-lbl">Events this month</span></div>
+        <div class="fht-stat"><span class="fht-num">${stats.active}</span><span class="fht-lbl">Currently active</span></div>
+        <div class="fht-stat"><span class="fht-num">${stats.upcoming}</span><span class="fht-lbl">Upcoming / due</span></div>
+        <div class="fht-stat"><span class="fht-num">${stats.members}</span><span class="fht-lbl">People tracked</span></div>
+      </div>
+
+      <div class="fht-main">
+        <div>
+          <div class="fht-section-head"><h2>Timeline</h2></div>
+          <div id="fht-timeline"></div>
+        </div>
+        <div>
+          <div class="fht-panel">
+            <div class="fht-section-head"><h2>Monthly activity</h2></div>
+            <canvas id="fht-chart-monthly" height="180"></canvas>
+            <div class="fht-legend" id="fht-legend-monthly"></div>
+          </div>
+          <div class="fht-panel">
+            <div class="fht-section-head"><h2 id="fht-second-title">By person</h2></div>
+            <canvas id="fht-chart-second" height="180"></canvas>
+          </div>
+          <div class="fht-panel">
+            <div class="fht-section-head"><h2>Coming up</h2></div>
+            <div id="fht-reminders"></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    renderPills();
+    renderTimeline(filtered);
+    renderMonthlyChart(filtered);
+    renderSecondChart(filtered);
+    renderReminders(filtered);
+
+    document.getElementById('fht-btn-add').addEventListener('click', ()=>openEventModal());
+    document.getElementById('fht-btn-people').addEventListener('click', ()=>openPeopleModal());
+    document.getElementById('fht-switch').addEventListener('click', switchFamily);
+    document.getElementById('fht-copy-code').addEventListener('click', async (e)=>{
+      try{ await navigator.clipboard.writeText(state.code); e.target.textContent='Copied'; setTimeout(()=>{ e.target.textContent='Copy'; }, 1500); }
+      catch(err){ /* clipboard may be unavailable; ignore */ }
+    });
+  }
+
+  function renderPills(){
+    const wrap = document.getElementById('fht-pills');
+    const allActive = state.activeFilter==='all';
+    let html = `<button class="fht-pill ${allActive?'active':''}" data-id="all">All</button>`;
+    html += state.household.members.map(m=>`
+      <button class="fht-pill ${state.activeFilter===m.id?'active':''}" data-id="${m.id}">
+        <span class="fht-dot" style="background:${m.color}"></span>${esc(m.name)}
+      </button>
+    `).join('');
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.fht-pill').forEach(p=>{
+      p.addEventListener('click', ()=>{
+        state.activeFilter = p.dataset.id;
+        renderApp();
+      });
+    });
+  }
+
+  function renderTimeline(events){
+    const wrap = document.getElementById('fht-timeline');
+    if(events.length===0){
+      wrap.innerHTML = `<div class="fht-empty">No events yet. Log your first health event to start building this record.</div>`;
+      return;
+    }
+    const sorted = [...events].sort((a,b)=> new Date(b.date) - new Date(a.date));
+    let currentMonth = null;
+    let html = '';
+    sorted.forEach(e=>{
+      const monthLabel = fmtMonthHead(e.date);
+      if(monthLabel !== currentMonth){
+        html += `<div class="fht-month-head">${monthLabel}</div>`;
+        currentMonth = monthLabel;
+      }
+      const cfg = TYPE_CONFIG[e.type];
+      const member = getMember(e.memberId);
+      html += `
+        <div class="fht-entry" style="--type-color:${cfg.hex}" data-id="${e.id}">
+          <div class="fht-shape">${cfg.shape}</div>
+          <div class="fht-entry-body">
+            <div class="fht-entry-top">
+              <span class="fht-entry-title">${esc(e.title)}</span>
+              <span class="fht-chip"><span class="fht-dot" style="background:${member.color}"></span>${esc(member.name)}</span>
+              <span class="fht-entry-date">${fmtDate(e.date)}</span>
+            </div>
+            ${e.detail1 ? `<div class="fht-entry-detail">${cfg.d1Label}: ${esc(e.detail1)}</div>` : ''}
+            ${e.notes ? `<div class="fht-entry-notes">${esc(e.notes)}</div>` : ''}
+          </div>
+          <button class="fht-entry-del" data-id="${e.id}" title="Delete">&times;</button>
+        </div>
+      `;
+    });
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('.fht-entry').forEach(row=>{
+      row.addEventListener('click', (ev)=>{
+        if(ev.target.classList.contains('fht-entry-del')) return;
+        const e = state.events.find(x=>x.id===row.dataset.id);
+        openEventModal(e);
+      });
+    });
+    wrap.querySelectorAll('.fht-entry-del').forEach(btn=>{
+      btn.addEventListener('click', async (ev)=>{
+        ev.stopPropagation();
+        if(btn.dataset.armed==='1'){
+          try{ await deleteEventRemote(btn.dataset.id); } catch(e){ console.error(e); }
+        } else {
+          btn.dataset.armed = '1';
+          btn.textContent = 'Confirm?';
+          setTimeout(()=>{ if(btn.isConnected){ btn.dataset.armed='0'; btn.textContent='×'; } }, 2500);
+        }
+      });
+    });
+  }
+
+  function lastNMonths(n){
+    const out = [];
+    const now = new Date();
+    for(let i=n-1;i>=0;i--){
+      const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+      out.push({ year:d.getFullYear(), month:d.getMonth(), label: d.toLocaleDateString(undefined,{month:'short'}) });
+    }
+    return out;
+  }
+
+  function renderMonthlyChart(events){
+    const months = lastNMonths(6);
+    const types = Object.keys(TYPE_CONFIG);
+    const datasets = types.map(t=>({
+      label: TYPE_CONFIG[t].label,
+      backgroundColor: TYPE_CONFIG[t].hex,
+      data: months.map(m=> events.filter(e=>{
+        const d = new Date(e.date+'T00:00:00');
+        return e.type===t && d.getFullYear()===m.year && d.getMonth()===m.month;
+      }).length),
+      borderRadius: 3,
+    }));
+    if(charts.monthly) charts.monthly.destroy();
+    const ctx = document.getElementById('fht-chart-monthly').getContext('2d');
+    charts.monthly = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: months.map(m=>m.label), datasets },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { stacked: true, grid: { display:false }, ticks: { color:'#7A7061', font:{ family:'Inter' } } },
+          y: { stacked: true, beginAtZero: true, ticks: { precision:0, color:'#7A7061', font:{ family:'Inter' } }, grid: { color:'#DDD1B4' } }
+        }
+      }
+    });
+    const legend = document.getElementById('fht-legend-monthly');
+    legend.innerHTML = types.map(t=>`
+      <span class="fht-legend-item"><span class="fht-dot" style="background:${TYPE_CONFIG[t].hex}"></span>${TYPE_CONFIG[t].label}</span>
+    `).join('');
+  }
+
+  function renderSecondChart(events){
+    const titleEl = document.getElementById('fht-second-title');
+    if(charts.second) charts.second.destroy();
+    const ctx = document.getElementById('fht-chart-second').getContext('2d');
+    if(state.activeFilter==='all'){
+      titleEl.textContent = 'By person';
+      const members = state.household.members;
+      const data = members.map(m=> events.filter(e=>e.memberId===m.id).length);
+      charts.second = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: members.map(m=>m.name), datasets:[{ data, backgroundColor: members.map(m=>m.color) }] },
+        options: { plugins: { legend: { position:'bottom', labels:{ color:'#7A7061', font:{ family:'Inter', size:12 }, boxWidth:10 } } } }
+      });
+    } else {
+      titleEl.textContent = 'By event type';
+      const types = Object.keys(TYPE_CONFIG);
+      const data = types.map(t=> events.filter(e=>e.type===t).length);
+      charts.second = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: types.map(t=>TYPE_CONFIG[t].label), datasets:[{ data, backgroundColor: types.map(t=>TYPE_CONFIG[t].hex) }] },
+        options: { plugins: { legend: { position:'bottom', labels:{ color:'#7A7061', font:{ family:'Inter', size:12 }, boxWidth:10 } } } }
+      });
+    }
+  }
+
+  function renderReminders(events){
+    const wrap = document.getElementById('fht-reminders');
+    const items = getReminders(events).slice(0,5);
+    if(items.length===0){
+      wrap.innerHTML = `<div class="fht-empty" style="padding:14px;">Nothing scheduled right now.</div>`;
+      return;
+    }
+    wrap.innerHTML = items.map(it=>{
+      const member = getMember(it.memberId);
+      return `
+        <div class="fht-remind-item">
+          <span>${esc(it.label)} <span style="color:var(--ink-soft);">— ${esc(member.name)}</span></span>
+          <span class="fht-r-date">${fmtDate(it.date)}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* ---------------- Event modal ---------------- */
+  function openEventModal(existing){
+    modalDeleteArm = false;
+    modalState = existing
+      ? { ...existing }
+      : { id:null, memberId: state.household.members[0].id, type:'illness', title:'', date: todayISO(), detail1:'', detail2:'', notes:'' };
+    renderEventModal();
+  }
+
+  function renderEventModal(){
+    const cfg = TYPE_CONFIG[modalState.type];
+    const overlay = document.createElement('div');
+    overlay.className = 'fht-overlay';
+    overlay.id = 'fht-overlay';
+    overlay.innerHTML = `
+      <div class="fht-modal">
+        <h2>${modalState.id ? 'Edit event' : 'Log a health event'}</h2>
+        <div class="fht-type-grid" id="fht-type-grid">
+          ${Object.keys(TYPE_CONFIG).map(t=>{
+            const c = TYPE_CONFIG[t];
+            const sel = t===modalState.type;
+            return `<button type="button" class="fht-type-opt ${sel?'selected':''}" data-type="${t}" style="--type-color:${c.hex};--type-bg:${c.bg}">
+              <span class="fht-shape">${c.shape}</span>${c.label}
+            </button>`;
+          }).join('')}
+        </div>
+
+        <div class="fht-field">
+          <label for="fht-m-member">Person</label>
+          <select id="fht-m-member">
+            ${state.household.members.map(m=>`<option value="${m.id}" ${m.id===modalState.memberId?'selected':''}>${esc(m.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fht-field">
+          <label for="fht-m-title">What happened</label>
+          <input type="text" id="fht-m-title" placeholder="${cfg.titlePh}" value="${esc(modalState.title)}" />
+        </div>
+        <div class="fht-field">
+          <label for="fht-m-date">Date</label>
+          <input type="date" id="fht-m-date" value="${modalState.date}" />
+        </div>
+        <div class="fht-field" id="fht-d1-wrap"></div>
+        <div class="fht-field">
+          <label for="fht-m-d2">${cfg.d2Label}</label>
+          <input type="date" id="fht-m-d2" value="${modalState.detail2||''}" />
+        </div>
+        <div class="fht-field">
+          <label for="fht-m-notes">Notes</label>
+          <textarea id="fht-m-notes" placeholder="Any details worth remembering">${esc(modalState.notes)}</textarea>
+        </div>
+        <p class="fht-error" id="fht-m-error" style="display:none;"></p>
+        <div class="fht-modal-actions">
+          ${modalState.id ? `<button class="fht-btn-text fht-btn-danger fht-left" id="fht-m-delete">Delete</button>` : ''}
+          <button class="fht-btn" id="fht-m-cancel">Cancel</button>
+          <button class="fht-btn fht-btn-primary" id="fht-m-save">Save</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    renderD1Field();
+
+    overlay.querySelectorAll('.fht-type-opt').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        modalState.type = btn.dataset.type;
+        modalState.detail1 = '';
+        modalState.detail2 = '';
+        closeModal();
+        renderEventModal();
+      });
+    });
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
+    document.getElementById('fht-m-cancel').addEventListener('click', closeModal);
+    document.getElementById('fht-m-member').addEventListener('change', e=>{ modalState.memberId = e.target.value; });
+    document.getElementById('fht-m-title').addEventListener('input', e=>{ modalState.title = e.target.value; });
+    document.getElementById('fht-m-date').addEventListener('input', e=>{ modalState.date = e.target.value; });
+    document.getElementById('fht-m-d2').addEventListener('input', e=>{ modalState.detail2 = e.target.value; });
+    document.getElementById('fht-m-notes').addEventListener('input', e=>{ modalState.notes = e.target.value; });
+
+    if(modalState.id){
+      document.getElementById('fht-m-delete').addEventListener('click', async (e)=>{
+        if(modalDeleteArm){
+          try{
+            await deleteEventRemote(modalState.id);
+            closeModal();
+          } catch(err){ console.error(err); }
+        } else {
+          modalDeleteArm = true;
+          e.target.textContent = 'Click again to delete';
+        }
+      });
+    }
+    document.getElementById('fht-m-save').addEventListener('click', async ()=>{
+      const errEl = document.getElementById('fht-m-error');
+      if(!modalState.title.trim() || !modalState.date){
+        errEl.textContent = 'Please add what happened and a date.';
+        errEl.style.display = 'block';
+        return;
+      }
+      const fields = {
+        memberId: modalState.memberId,
+        type: modalState.type,
+        title: modalState.title.trim(),
+        date: modalState.date,
+        detail1: modalState.detail1 || '',
+        detail2: modalState.detail2 || null,
+        notes: modalState.notes || ''
+      };
+      try{
+        if(modalState.id){
+          await updateEventRemote(modalState.id, fields);
+        } else {
+          await addEventRemote(fields);
+        }
+        closeModal();
+      } catch(err){
+        console.error(err);
+        errEl.textContent = 'Could not save — check your connection and try again.';
+        errEl.style.display = 'block';
+      }
+    });
+  }
+
+  function renderD1Field(){
+    const cfg = TYPE_CONFIG[modalState.type];
+    const wrap = document.getElementById('fht-d1-wrap');
+    if(cfg.d1Type==='select'){
+      wrap.innerHTML = `
+        <label for="fht-m-d1">${cfg.d1Label}</label>
+        <select id="fht-m-d1">
+          <option value="">Select…</option>
+          ${cfg.d1Options.map(o=>`<option value="${o}" ${modalState.detail1===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+      `;
+    } else {
+      wrap.innerHTML = `
+        <label for="fht-m-d1">${cfg.d1Label}</label>
+        <input type="text" id="fht-m-d1" value="${esc(modalState.detail1)}" />
+      `;
+    }
+    document.getElementById('fht-m-d1').addEventListener(cfg.d1Type==='select' ? 'change' : 'input', e=>{
+      modalState.detail1 = e.target.value;
+    });
+  }
+
+  function closeModal(){
+    const overlay = document.getElementById('fht-overlay');
+    if(overlay) overlay.remove();
+    modalState = null;
+    modalDeleteArm = false;
+  }
+
+  /* ---------------- People modal ---------------- */
+  function openPeopleModal(){
+    peopleDraft = { members: state.household.members.map(m=>({...m})) };
+    renderPeopleModal();
+  }
+
+  function renderPeopleModal(){
+    const overlay = document.createElement('div');
+    overlay.className = 'fht-overlay';
+    overlay.id = 'fht-people-overlay';
+    overlay.innerHTML = `
+      <div class="fht-modal">
+        <h2>People</h2>
+        <div class="fht-people-list" id="fht-people-list"></div>
+        <button class="fht-btn-text" id="fht-people-add" type="button">+ Add person</button>
+        <p class="fht-error" id="fht-people-error" style="display:none;"></p>
+        <div class="fht-modal-actions">
+          <button class="fht-btn" id="fht-people-cancel">Cancel</button>
+          <button class="fht-btn fht-btn-primary" id="fht-people-save">Save</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    function renderRows(){
+      document.getElementById('fht-people-list').innerHTML = peopleDraft.members.map((m,i)=>`
+        <div class="fht-people-row">
+          <div class="fht-swatch-row">
+            ${PALETTE.map(c=>`<button type="button" class="fht-swatch ${m.color===c?'selected':''}" style="background:${c}" data-color="${c}" data-idx="${i}"></button>`).join('')}
+          </div>
+          <input type="text" class="fht-people-name" data-idx="${i}" value="${esc(m.name)}" />
+          ${peopleDraft.members.length>1 ? `<button type="button" class="fht-remove-row" data-idx="${i}">&times;</button>` : ''}
+        </div>
+      `).join('');
+      document.querySelectorAll('.fht-people-row .fht-swatch').forEach(sw=>{
+        sw.addEventListener('click', e=>{ peopleDraft.members[+e.target.dataset.idx].color = e.target.dataset.color; renderRows(); });
+      });
+      document.querySelectorAll('.fht-people-name').forEach(inp=>{
+        inp.addEventListener('input', e=>{ peopleDraft.members[+e.target.dataset.idx].name = e.target.value; });
+      });
+      document.querySelectorAll('.fht-people-row .fht-remove-row').forEach(btn=>{
+        btn.addEventListener('click', e=>{ peopleDraft.members.splice(+e.target.dataset.idx,1); renderRows(); });
+      });
+    }
+    renderRows();
+
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closePeopleModal(); });
+    document.getElementById('fht-people-cancel').addEventListener('click', closePeopleModal);
+    document.getElementById('fht-people-add').addEventListener('click', ()=>{
+      if(peopleDraft.members.length>=8) return;
+      peopleDraft.members.push({ id: uidLocal(), name:'', color: PALETTE[peopleDraft.members.length % PALETTE.length] });
+      renderRows();
+    });
+    document.getElementById('fht-people-save').addEventListener('click', async ()=>{
+      const errEl = document.getElementById('fht-people-error');
+      if(peopleDraft.members.some(m=>!m.name.trim())){
+        errEl.textContent = 'Every person needs a name.';
+        errEl.style.display = 'block';
+        return;
+      }
+      state.household.members = peopleDraft.members.map(m=>({ ...m, name: m.name.trim() }));
+      try{
+        await saveHouseholdRemote();
+        closePeopleModal();
+      } catch(err){
+        console.error(err);
+        errEl.textContent = 'Could not save — check your connection and try again.';
+        errEl.style.display = 'block';
+      }
+    });
+  }
+  function closePeopleModal(){
+    const overlay = document.getElementById('fht-people-overlay');
+    if(overlay) overlay.remove();
+    peopleDraft = null;
+  }
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    const savedCode = localStorage.getItem(CODE_KEY);
+    if(!savedCode){
+      renderGate();
+      return;
+    }
+    try{
+      const snap = await getDoc(householdRef(savedCode));
+      if(!snap.exists()){
+        localStorage.removeItem(CODE_KEY);
+        renderGate();
+        return;
+      }
+      state.code = savedCode;
+      startListening();
+    } catch(e){
+      console.error(e);
+      renderGate('error');
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
