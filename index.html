@@ -36,6 +36,22 @@
     --radius: 10px;
   }
 
+  [data-theme="dark"]{
+    --paper: #1D2321;
+    --paper-light: #262E2B;
+    --ink: #EDE8DC;
+    --ink-soft: #9BA39C;
+    --line: #3A443F;
+    --teal: #6FA79C;
+    --teal-dark: #8FC2B6;
+    --teal-tint: #2E3D39;
+    --illness-bg: #3A2624;
+    --appt-bg: #3A3220;
+    --med-bg: #263223;
+    --vax-bg: #202F35;
+    --growth-bg: #2E2432;
+  }
+
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   }
@@ -188,7 +204,7 @@
   .fht-header-top h1{ font-size: 25px; }
   .fht-header-top .fht-tag{ color: var(--ink-soft); font-size: 13.5px; margin-top: 4px; }
   .fht-header-top .fht-tag button{ border:none; background:none; color:var(--teal); cursor:pointer; font-weight:600; font-size:12.5px; padding:0; margin-left: 8px; }
-  .fht-header-actions{ display:flex; gap: 10px; }
+  .fht-header-actions{ display:flex; gap: 10px; flex-wrap: wrap; }
 
   .fht-pills{
     max-width: 1180px;
@@ -215,6 +231,21 @@
   .fht-pill .fht-dot{ width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .fht-pill.active{ background: var(--teal); color: var(--paper-light); border-color: var(--teal); }
   .fht-pill.active .fht-dot{ box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
+  .fht-preset-pill{
+    border: 1px dashed var(--line); background: none; color: var(--ink-soft);
+    padding: 5px 12px; border-radius: 999px; cursor:pointer; font-size: 12.5px; font-weight:600; white-space:nowrap;
+  }
+  .fht-preset-pill:hover{ border-color: var(--illness); color: var(--illness); }
+  .fht-preset-label{ font-size: 12px; color: var(--ink-soft); align-self:center; margin-right:2px; }
+  .fht-search-row{ display:flex; gap:8px; margin-bottom: 14px; }
+  .fht-search-row input[type=text]{ flex:1; padding: 8px 11px; border:1px solid var(--line); border-radius: 8px; background:#fff; color:var(--ink); }
+  [data-theme="dark"] .fht-search-row input[type=text],
+  [data-theme="dark"] .fht-search-row select,
+  [data-theme="dark"] .fht-field input, [data-theme="dark"] .fht-field select, [data-theme="dark"] .fht-field textarea,
+  [data-theme="dark"] .fht-people-row input, [data-theme="dark"] .fht-care-grid input, [data-theme="dark"] .fht-birthdate-row input{
+    background: var(--paper); color: var(--ink);
+  }
+  .fht-search-row select{ padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background:#fff; color:var(--ink); }
 
   /* ---------- Stats ledger ---------- */
   .fht-stats{
@@ -366,6 +397,8 @@
   }
   .fht-photo-preview{ margin-top: 8px; display:flex; align-items:center; gap:10px; }
   .fht-photo-preview img{ width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border:1px solid var(--line); }
+  .fht-doc-thumb{ display:flex; align-items:center; justify-content:center; font-size:20px; background:var(--paper); text-decoration:none; }
+  .fht-doc-chip{ display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; text-decoration:none; color:var(--teal); font-weight:600; font-size:13px; }
   .fht-lightbox{
     position: fixed; inset:0; background: rgba(20,17,13,0.85); z-index: 1100;
     display:flex; align-items:center; justify-content:center; padding: 24px; cursor: zoom-out;
@@ -401,6 +434,28 @@
   .fht-birthdate-row label{ font-size:12px; color:var(--ink-soft); }
   .fht-birthdate-row input{ padding:6px 8px; border:1px solid var(--line); border-radius:7px; font-size:13px; }
 
+  .fht-condition-tags{ margin: 8px 0 6px 46px; display:flex; flex-wrap:wrap; gap:6px; }
+  .fht-condition-tag{
+    display:inline-flex; align-items:center; gap:6px; padding: 4px 6px 4px 10px; border-radius:999px; font-size:12px; font-weight:600;
+  }
+  .fht-condition-allergy{ background: var(--illness-bg); color: var(--illness); }
+  .fht-condition-condition{ background: var(--teal-tint); color: var(--teal); }
+  .fht-condition-remove{ border:none; background:none; cursor:pointer; font-size:13px; color:inherit; opacity:0.7; padding:0 2px; }
+  .fht-condition-remove:hover{ opacity:1; }
+  .fht-condition-add{ display:flex; gap:6px; margin: 0 0 10px 46px; }
+  .fht-condition-add select{ padding:6px 8px; border:1px solid var(--line); border-radius:7px; font-size:12.5px; }
+  .fht-condition-add input{ flex:1; padding:6px 9px; border:1px solid var(--line); border-radius:7px; font-size:12.5px; }
+
+  .fht-alert-banner{
+    max-width: 1180px; margin: 12px auto 0 auto; padding: 10px 32px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+  }
+  .fht-alert-banner .fht-alert-label{ font-size:12.5px; font-weight:700; color:var(--illness); margin-right:4px; }
+  .fht-readonly-banner{
+    max-width:1180px; margin:10px auto 0 auto; padding: 8px 32px;
+    font-size:12.5px; color:var(--ink-soft); font-weight:600;
+  }
+
   @media print{
     body *{ visibility: hidden; }
     #fht-print-area, #fht-print-area *{ visibility: visible; }
@@ -416,6 +471,7 @@
 <div id="fht-root"><div class="fht-loading">Loading your family's record…</div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
@@ -425,6 +481,9 @@ import {
 import {
   getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-storage.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 /* =========================================================
    1. PASTE YOUR FIREBASE CONFIG HERE (see README.md)
@@ -441,9 +500,23 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const storage = getStorage(firebaseApp);
+const auth = getAuth(firebaseApp);
 
 (function(){
   const root = document.getElementById('fht-root');
+
+  const THEME_KEY = 'fht-theme';
+  function applyTheme(){
+    const saved = localStorage.getItem(THEME_KEY) || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+  }
+  function toggleTheme(){
+    const current = localStorage.getItem(THEME_KEY) || 'light';
+    const next = current==='dark' ? 'light' : 'dark';
+    localStorage.setItem(THEME_KEY, next);
+    document.documentElement.setAttribute('data-theme', next);
+  }
+  applyTheme();
 
   document.addEventListener('click', (e)=>{
     const menu = document.getElementById('fht-data-menu');
@@ -453,6 +526,7 @@ const storage = getStorage(firebaseApp);
     }
   });
   const CODE_KEY = 'fht-family-code';
+  const READONLY_KEY = 'fht-readonly';
 
   const PALETTE = ['#AD4C4C','#B47F26','#5B7A45','#3D7089','#7A5C8F','#3E5C7A','#946B3D','#4C7A6A'];
 
@@ -485,7 +559,21 @@ const storage = getStorage(firebaseApp);
   function fromCm(cm, units){ return units==='metric' ? cm : cm/2.54; }
   function fromKg(kg, units){ return units==='metric' ? kg : kg/0.453592; }
 
-  let state = { code: null, household: null, events: [], activeFilter: 'all' };
+  let state = { code: null, household: null, events: [], activeFilter: 'all', searchQuery: '', typeFilter: 'all', readOnly: false };
+  let currentUser = null;
+
+  const googleProvider = new GoogleAuthProvider();
+  function signIn(){
+    signInWithPopup(auth, googleProvider).catch(err=>{
+      console.error(err);
+      alert('Sign-in failed — this can happen if pop-ups are blocked, or if this site\u2019s domain hasn\u2019t been added to Firebase\u2019s authorized domains yet.');
+    });
+  }
+  function signOutUser(){ signOut(auth).catch(()=>{}); }
+  onAuthStateChanged(auth, (user)=>{
+    currentUser = user;
+    if(state.household) renderApp();
+  });
   let modalState = null;
   let modalDeleteArm = false;
   let peopleDraft = null;
@@ -516,6 +604,15 @@ const storage = getStorage(firebaseApp);
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let out=''; for(let i=0;i<8;i++) out+=chars[Math.floor(Math.random()*chars.length)];
     return out;
+  }
+  function joinURL(code){
+    return `${location.origin}${location.pathname}?code=${code}`;
+  }
+  function renderQR(elId, text){
+    const el = document.getElementById(elId);
+    if(!el || typeof QRCode==='undefined') return;
+    el.innerHTML = '';
+    new QRCode(el, { text, width:96, height:96, colorDark:'#2E4A52', colorLight:'#ffffff' });
   }
 
   /* ---------------- Firestore helpers ---------------- */
@@ -551,7 +648,8 @@ const storage = getStorage(firebaseApp);
       }
       state.household = snap.data();
       if(!state.household.measurementUnits) state.household.measurementUnits = 'imperial';
-      state.household.members.forEach(m=>{ if(m.birthdate===undefined) m.birthdate=null; if(!m.care) m.care={}; });
+      if(state.household.viewOnlyCode===undefined) state.household.viewOnlyCode = null;
+      state.household.members.forEach(m=>{ if(m.birthdate===undefined) m.birthdate=null; if(!m.care) m.care={}; if(!m.conditions) m.conditions=[]; });
       if(state.activeFilter!=='all' && !state.household.members.find(m=>m.id===state.activeFilter)){
         state.activeFilter = 'all';
       }
@@ -570,7 +668,8 @@ const storage = getStorage(firebaseApp);
     if(unsubHousehold) unsubHousehold();
     if(unsubEvents) unsubEvents();
     localStorage.removeItem(CODE_KEY);
-    state = { code:null, household:null, events:[], activeFilter:'all' };
+    localStorage.removeItem(READONLY_KEY);
+    state = { code:null, household:null, events:[], activeFilter:'all', searchQuery:'', typeFilter:'all', readOnly:false };
     renderGate();
   }
 
@@ -624,6 +723,9 @@ const storage = getStorage(firebaseApp);
           <label for="fht-join-code">Family code</label>
           <input type="text" id="fht-join-code" placeholder="e.g. 7F3KQ9XM" style="text-transform:uppercase; letter-spacing:1px;" />
         </div>
+        <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft); margin-bottom:14px;">
+          <input type="checkbox" id="fht-join-viewonly" /> This is a view-only code
+        </label>
         <p class="fht-error" id="fht-join-error" style="display:none;"></p>
         <div style="display:flex; gap:10px;">
           <button class="fht-btn" id="fht-join-back">Back</button>
@@ -634,9 +736,32 @@ const storage = getStorage(firebaseApp);
     document.getElementById('fht-join-submit').addEventListener('click', async ()=>{
       const input = document.getElementById('fht-join-code');
       const errEl = document.getElementById('fht-join-error');
+      const isViewOnly = document.getElementById('fht-join-viewonly').checked;
       const code = input.value.trim().toUpperCase();
       if(!code){ errEl.textContent = 'Please enter a family code.'; errEl.style.display='block'; return; }
       try{
+        if(isViewOnly){
+          const voSnap = await getDoc(doc(db,'viewOnlyCodes',code));
+          if(!voSnap.exists()){
+            errEl.textContent = "We couldn't find a view-only code matching that. Double-check it and try again.";
+            errEl.style.display = 'block';
+            return;
+          }
+          const familyCode = voSnap.data().familyCode;
+          const hSnap = await getDoc(householdRef(familyCode));
+          if(!hSnap.exists()){
+            errEl.textContent = "That view-only code points to a family that no longer exists.";
+            errEl.style.display = 'block';
+            return;
+          }
+          state.code = familyCode;
+          state.readOnly = true;
+          localStorage.setItem(CODE_KEY, familyCode);
+          localStorage.setItem(READONLY_KEY, '1');
+          root.innerHTML = `<div class="fht-loading">Joining your family's record…</div>`;
+          startListening();
+          return;
+        }
         const snap = await getDoc(householdRef(code));
         if(!snap.exists()){
           errEl.textContent = "We couldn't find a family with that code. Double-check it and try again.";
@@ -644,7 +769,9 @@ const storage = getStorage(firebaseApp);
           return;
         }
         state.code = code;
+        state.readOnly = false;
         localStorage.setItem(CODE_KEY, code);
+        localStorage.removeItem(READONLY_KEY);
         root.innerHTML = `<div class="fht-loading">Joining your family's record…</div>`;
         startListening();
       } catch(e){
@@ -673,6 +800,7 @@ const storage = getStorage(firebaseApp);
           <div class="fht-code-display">
             <span class="fht-code">${d.code}</span>
             <span style="color:var(--ink-soft); font-size:12.5px;">This is your family code — share it with your household so they can join.</span>
+            <div id="fht-ob-qr" style="margin-left:auto;"></div>
           </div>
           <div class="fht-field">
             <label for="fht-ob-name">Household name</label>
@@ -719,6 +847,7 @@ const storage = getStorage(firebaseApp);
       });
     }
     renderMemberRows();
+    renderQR('fht-ob-qr', joinURL(d.code));
     document.getElementById('fht-ob-name').addEventListener('input', e=>{ d.name = e.target.value; });
     document.getElementById('fht-ob-add').addEventListener('click', ()=>{
       if(d.members.length>=8) return;
@@ -738,7 +867,8 @@ const storage = getStorage(firebaseApp);
       const household = {
         name,
         measurementUnits: 'imperial',
-        members: d.members.map(m=>({ id: uidLocal(), name: m.name.trim(), color: m.color, birthdate: null, care: {} }))
+        viewOnlyCode: null,
+        members: d.members.map(m=>({ id: uidLocal(), name: m.name.trim(), color: m.color, birthdate: null, care: {}, conditions: [] }))
       };
       try{
         await createHousehold(d.code, household);
@@ -873,6 +1003,76 @@ const storage = getStorage(firebaseApp);
   }
 
   /* ---------------- Vaccine schedule modal ---------------- */
+  /* ---------------- Invite / sharing modal ---------------- */
+  async function generateViewOnlyLink(){
+    const voCode = generateCode();
+    await setDoc(doc(db,'viewOnlyCodes',voCode), { familyCode: state.code });
+    state.household.viewOnlyCode = voCode;
+    await saveHouseholdRemote();
+  }
+
+  function renderViewOnlySection(){
+    const wrap = document.getElementById('fht-viewonly-section');
+    if(!wrap) return;
+    if(state.household.viewOnlyCode){
+      wrap.innerHTML = `
+        <div class="fht-code-display">
+          <span class="fht-code">${state.household.viewOnlyCode}</span>
+          <div id="fht-invite-qr-view" style="margin-left:auto;"></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="fht-btn" id="fht-invite-copy-view">Copy view-only link</button>
+          <button class="fht-btn-text" id="fht-invite-regen-view">Regenerate code</button>
+        </div>
+      `;
+      renderQR('fht-invite-qr-view', joinURL(state.household.viewOnlyCode)+'&view=1');
+      document.getElementById('fht-invite-copy-view').addEventListener('click', async (e)=>{
+        try{ await navigator.clipboard.writeText(joinURL(state.household.viewOnlyCode)+'&view=1'); e.target.textContent='Copied!'; setTimeout(()=>{ e.target.textContent='Copy view-only link'; },1500); } catch(err){}
+      });
+      document.getElementById('fht-invite-regen-view').addEventListener('click', async ()=>{
+        await generateViewOnlyLink();
+        renderViewOnlySection();
+      });
+    } else {
+      wrap.innerHTML = `<button class="fht-btn" id="fht-invite-gen-view">Create view-only link</button>`;
+      document.getElementById('fht-invite-gen-view').addEventListener('click', async ()=>{
+        await generateViewOnlyLink();
+        renderViewOnlySection();
+      });
+    }
+  }
+
+  function openInviteModal(){
+    const overlay = document.createElement('div');
+    overlay.className = 'fht-overlay';
+    overlay.id = 'fht-invite-overlay';
+    overlay.innerHTML = `
+      <div class="fht-modal">
+        <h2>Invite your family</h2>
+        <p class="fht-note">Anyone with this code or link gets full access — they can log, edit, and delete events.</p>
+        <div class="fht-code-display">
+          <span class="fht-code">${state.code}</span>
+          <div id="fht-invite-qr-full" style="margin-left:auto;"></div>
+        </div>
+        <button class="fht-btn" id="fht-invite-copy-full">Copy invite link</button>
+        <hr style="border:none; border-top:1px solid var(--line); margin:18px 0;" />
+        <p class="fht-note">Want to share view-only access instead — for a babysitter or grandparent?</p>
+        <div id="fht-viewonly-section"></div>
+        <div class="fht-modal-actions">
+          <button class="fht-btn" id="fht-invite-close">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+    document.getElementById('fht-invite-close').addEventListener('click', ()=> overlay.remove());
+    renderQR('fht-invite-qr-full', joinURL(state.code));
+    document.getElementById('fht-invite-copy-full').addEventListener('click', async (e)=>{
+      try{ await navigator.clipboard.writeText(joinURL(state.code)); e.target.textContent='Copied!'; setTimeout(()=>{ e.target.textContent='Copy invite link'; },1500); } catch(err){}
+    });
+    renderViewOnlySection();
+  }
+
   function openVaccineModal(){
     const overlay = document.createElement('div');
     overlay.className = 'fht-overlay';
@@ -907,18 +1107,20 @@ const storage = getStorage(firebaseApp);
       const bdWrap = document.getElementById('fht-vax-birthdate-wrap');
       const listWrap = document.getElementById('fht-vax-list');
       if(!member.birthdate){
-        bdWrap.innerHTML = `
+        bdWrap.innerHTML = state.readOnly ? `<p class="fht-note">No birthdate on file for ${esc(member.name)}.</p>` : `
           <div class="fht-field">
             <label for="fht-vax-bd">${esc(member.name)}'s birthdate (needed to estimate due dates)</label>
             <input type="date" id="fht-vax-bd" />
           </div>
         `;
-        document.getElementById('fht-vax-bd').addEventListener('change', async (e)=>{
-          const m = state.household.members.find(x=>x.id===memberId);
-          m.birthdate = e.target.value;
-          await saveHouseholdRemote();
-          renderVaxList();
-        });
+        if(!state.readOnly){
+          document.getElementById('fht-vax-bd').addEventListener('change', async (e)=>{
+            const m = state.household.members.find(x=>x.id===memberId);
+            m.birthdate = e.target.value;
+            await saveHouseholdRemote();
+            renderVaxList();
+          });
+        }
         listWrap.innerHTML = '';
         return;
       }
@@ -948,7 +1150,7 @@ const storage = getStorage(firebaseApp);
               <div class="fht-vax-name">${esc(item.name)}</div>
               <div class="fht-vax-sub">${sub}</div>
             </div>
-            ${match ? badge : `<div style="display:flex; align-items:center; gap:8px;">${badge}<button class="fht-btn-text" data-name="${esc(item.name)}" data-member="${memberId}">Log now</button></div>`}
+            ${match || state.readOnly ? badge : `<div style="display:flex; align-items:center; gap:8px;">${badge}<button class="fht-btn-text" data-name="${esc(item.name)}" data-member="${memberId}">Log now</button></div>`}
           </div>
         `;
       }).join('');
@@ -959,7 +1161,7 @@ const storage = getStorage(firebaseApp);
           modalState = {
             id:null, memberId: btn.dataset.member, type:'vaccine', title: btn.dataset.name,
             date: todayISO(), detail1:'', detail2:'', notes:'',
-            photoURL:null, photoFile:null, removePhoto:false
+            photoURL:null, photoFile:null, photoType:null, removePhoto:false, frequency:null
           };
           renderEventModal();
         });
@@ -1050,33 +1252,41 @@ const storage = getStorage(firebaseApp);
       ? state.events
       : state.events.filter(e=>e.memberId===state.activeFilter);
     const stats = computeStats(filtered);
+    const timelineFiltered = computeTimelineFiltered(filtered);
 
     root.innerHTML = `
       <div class="fht-header">
         <div class="fht-header-top">
           <div>
             <h1>${esc(state.household.name)}</h1>
-            <div class="fht-tag">Family code: ${state.code} <button id="fht-copy-code" type="button">Copy</button><button id="fht-switch" type="button">Switch family</button></div>
+            <div class="fht-tag">Family code: ${state.code} ${!state.readOnly ? `<button id="fht-copy-code" type="button">Copy</button><button id="fht-invite-btn" type="button">QR / invite</button>` : ''}<button id="fht-switch" type="button">Switch family</button></div>
           </div>
           <div class="fht-header-actions">
-            <button class="fht-btn" id="fht-btn-people">People &amp; care</button>
+            <button class="fht-btn" id="fht-btn-auth">${currentUser ? `${esc((currentUser.displayName||currentUser.email||'').split(' ')[0])} (sign out)` : 'Sign in with Google'}</button>
+            <button class="fht-btn" id="fht-btn-theme" title="Toggle dark mode">${(localStorage.getItem(THEME_KEY)||'light')==='dark' ? '☀️ Light' : '🌙 Dark'}</button>
+            <button class="fht-btn" id="fht-btn-people">${state.readOnly ? 'People &amp; care (view)' : 'People &amp; care'}</button>
             <button class="fht-btn" id="fht-btn-vax">Vaccines</button>
             <div class="fht-dropdown-wrap">
               <button class="fht-btn" id="fht-btn-data">Data ▾</button>
               <div class="fht-dropdown" id="fht-data-menu" style="display:none;">
                 <button id="fht-data-csv">Export as CSV</button>
                 <button id="fht-data-print">Print / save as PDF</button>
-                <hr />
-                <button id="fht-data-backup">Download full backup</button>
-                <button id="fht-data-restore">Restore from backup…</button>
-                <input type="file" accept="application/json" id="fht-restore-input" style="display:none;" />
+                ${!state.readOnly ? `
+                  <hr />
+                  <button id="fht-data-backup">Download full backup</button>
+                  <button id="fht-data-restore">Restore from backup…</button>
+                  <input type="file" accept="application/json" id="fht-restore-input" style="display:none;" />
+                ` : ''}
               </div>
             </div>
-            <button class="fht-btn fht-btn-primary" id="fht-btn-add">+ Log event</button>
+            ${!state.readOnly ? `<button class="fht-btn fht-btn-primary" id="fht-btn-add">+ Log event</button>` : ''}
           </div>
         </div>
         <div class="fht-pills" id="fht-pills"></div>
+        ${!state.readOnly ? `<div class="fht-pills" id="fht-presets" style="margin-top:6px;"></div>` : ''}
+        ${state.readOnly ? `<div class="fht-readonly-banner">👁 Viewing in read-only mode — you can look around, but can't add, edit, or delete anything.</div>` : ''}
       </div>
+      <div id="fht-alert-banner"></div>
 
       <div class="fht-stats">
         <div class="fht-stat"><span class="fht-num">${stats.thisMonth}</span><span class="fht-lbl">Events this month</span></div>
@@ -1088,6 +1298,13 @@ const storage = getStorage(firebaseApp);
       <div class="fht-main">
         <div>
           <div class="fht-section-head"><h2>Timeline</h2></div>
+          <div class="fht-search-row">
+            <input type="text" id="fht-search" placeholder="Search events…" value="${esc(state.searchQuery)}" />
+            <select id="fht-type-filter">
+              <option value="all" ${state.typeFilter==='all'?'selected':''}>All types</option>
+              ${Object.keys(TYPE_CONFIG).map(t=>`<option value="${t}" ${state.typeFilter===t?'selected':''}>${TYPE_CONFIG[t].label}</option>`).join('')}
+            </select>
+          </div>
           <div id="fht-timeline"></div>
         </div>
         <div>
@@ -1111,20 +1328,35 @@ const storage = getStorage(firebaseApp);
     `;
 
     renderPills();
-    renderTimeline(filtered);
+    if(!state.readOnly) renderPresets();
+    renderAlertBanner();
+    document.getElementById('fht-search').addEventListener('input', e=>{
+      state.searchQuery = e.target.value;
+      refreshTimelineOnly();
+    });
+    document.getElementById('fht-type-filter').addEventListener('change', e=>{
+      state.typeFilter = e.target.value;
+      refreshTimelineOnly();
+    });
+    renderTimeline(timelineFiltered);
     renderMonthlyChart(filtered);
     renderSecondChart(filtered);
     renderGrowthPanel();
     renderReminders(filtered);
 
-    document.getElementById('fht-btn-add').addEventListener('click', ()=>openEventModal());
+    document.getElementById('fht-btn-auth').addEventListener('click', ()=>{ currentUser ? signOutUser() : signIn(); });
+    document.getElementById('fht-btn-theme').addEventListener('click', ()=>{ toggleTheme(); renderApp(); });
     document.getElementById('fht-btn-people').addEventListener('click', ()=>openPeopleModal());
     document.getElementById('fht-btn-vax').addEventListener('click', ()=>openVaccineModal());
     document.getElementById('fht-switch').addEventListener('click', switchFamily);
-    document.getElementById('fht-copy-code').addEventListener('click', async (e)=>{
-      try{ await navigator.clipboard.writeText(state.code); e.target.textContent='Copied'; setTimeout(()=>{ e.target.textContent='Copy'; }, 1500); }
-      catch(err){ /* clipboard may be unavailable; ignore */ }
-    });
+    if(!state.readOnly){
+      document.getElementById('fht-btn-add').addEventListener('click', ()=>openEventModal());
+      document.getElementById('fht-invite-btn').addEventListener('click', openInviteModal);
+      document.getElementById('fht-copy-code').addEventListener('click', async (e)=>{
+        try{ await navigator.clipboard.writeText(state.code); e.target.textContent='Copied'; setTimeout(()=>{ e.target.textContent='Copy'; }, 1500); }
+        catch(err){ /* clipboard may be unavailable; ignore */ }
+      });
+    }
 
     const dataBtn = document.getElementById('fht-btn-data');
     const dataMenu = document.getElementById('fht-data-menu');
@@ -1134,9 +1366,61 @@ const storage = getStorage(firebaseApp);
     });
     document.getElementById('fht-data-csv').addEventListener('click', exportCSV);
     document.getElementById('fht-data-print').addEventListener('click', printRecord);
-    document.getElementById('fht-data-backup').addEventListener('click', exportBackup);
-    document.getElementById('fht-data-restore').addEventListener('click', ()=> document.getElementById('fht-restore-input').click());
-    document.getElementById('fht-restore-input').addEventListener('change', handleRestoreFile);
+    if(!state.readOnly){
+      document.getElementById('fht-data-backup').addEventListener('click', exportBackup);
+      document.getElementById('fht-data-restore').addEventListener('click', ()=> document.getElementById('fht-restore-input').click());
+      document.getElementById('fht-restore-input').addEventListener('change', handleRestoreFile);
+    }
+  }
+
+  const QUICK_PRESETS = ['Fever','Cold','Ear infection','Stomach bug','Rash','Cough'];
+
+  function renderPresets(){
+    const wrap = document.getElementById('fht-presets');
+    if(!wrap) return;
+    wrap.innerHTML = `<span class="fht-preset-label">Quick log:</span>` + QUICK_PRESETS.map(p=>`<button type="button" class="fht-preset-pill" data-preset="${esc(p)}">${esc(p)}</button>`).join('');
+    wrap.querySelectorAll('.fht-preset-pill').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        modalDeleteArm = false;
+        modalState = {
+          id:null, memberId: state.activeFilter!=='all' ? state.activeFilter : state.household.members[0].id,
+          type:'illness', title: btn.dataset.preset, date: todayISO(), detail1:'', detail2:'', notes:'',
+          photoURL:null, photoFile:null, photoType:null, removePhoto:false, frequency:null
+        };
+        renderEventModal();
+      });
+    });
+  }
+
+  function computeTimelineFiltered(list){
+    return list.filter(e=>{
+      if(state.typeFilter!=='all' && e.type!==state.typeFilter) return false;
+      if(state.searchQuery){
+        const q = state.searchQuery.toLowerCase();
+        const hay = [e.title, e.notes, e.detail1, e.detail2].join(' ').toLowerCase();
+        if(!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+  function refreshTimelineOnly(){
+    const filtered = state.activeFilter==='all' ? state.events : state.events.filter(e=>e.memberId===state.activeFilter);
+    renderTimeline(computeTimelineFiltered(filtered));
+  }
+
+  function renderAlertBanner(){
+    const wrap = document.getElementById('fht-alert-banner');
+    if(!wrap) return;
+    if(state.activeFilter==='all'){ wrap.innerHTML=''; return; }
+    const member = getMember(state.activeFilter);
+    const conditions = member.conditions || [];
+    if(conditions.length===0){ wrap.innerHTML=''; return; }
+    wrap.innerHTML = `
+      <div class="fht-alert-banner">
+        <span class="fht-alert-label">⚠ ${esc(member.name)}:</span>
+        ${conditions.map(c=>`<span class="fht-condition-tag fht-condition-${c.type}">${esc(c.label)}</span>`).join('')}
+      </div>
+    `;
   }
 
   function renderPills(){
@@ -1188,7 +1472,9 @@ const storage = getStorage(firebaseApp);
       html += `
         <div class="fht-entry" style="--type-color:${cfg.hex}" data-id="${e.id}">
           <div class="fht-shape">${cfg.shape}</div>
-          ${e.photoURL ? `<img class="fht-thumb" src="${e.photoURL}" alt="" data-lightbox="${e.photoURL}" />` : ''}
+          ${e.photoURL ? (e.photoType==='pdf'
+            ? `<a class="fht-thumb fht-doc-thumb" href="${e.photoURL}" target="_blank" rel="noopener" title="Open document" onclick="event.stopPropagation()">📄</a>`
+            : `<img class="fht-thumb" src="${e.photoURL}" alt="" data-lightbox="${e.photoURL}" />`) : ''}
           <div class="fht-entry-body">
             <div class="fht-entry-top">
               <span class="fht-entry-title">${esc(e.title)}</span>
@@ -1197,8 +1483,9 @@ const storage = getStorage(firebaseApp);
             </div>
             ${detailLine}
             ${e.notes ? `<div class="fht-entry-notes">${esc(e.notes)}</div>` : ''}
+            ${e.loggedBy ? `<div class="fht-note" style="margin-top:2px;">Logged by ${esc(e.loggedBy)}</div>` : ''}
           </div>
-          <button class="fht-entry-del" data-id="${e.id}" title="Delete">&times;</button>
+          ${!state.readOnly ? `<button class="fht-entry-del" data-id="${e.id}" title="Delete">&times;</button>` : ''}
         </div>
       `;
     });
@@ -1207,26 +1494,29 @@ const storage = getStorage(firebaseApp);
       row.addEventListener('click', (ev)=>{
         if(ev.target.classList.contains('fht-entry-del')) return;
         if(ev.target.dataset.lightbox){ openLightbox(ev.target.dataset.lightbox); return; }
+        if(state.readOnly) return;
         const e = state.events.find(x=>x.id===row.dataset.id);
         openEventModal(e);
       });
     });
-    wrap.querySelectorAll('.fht-entry-del').forEach(btn=>{
-      btn.addEventListener('click', async (ev)=>{
-        ev.stopPropagation();
-        if(btn.dataset.armed==='1'){
-          try{
-            const e = state.events.find(x=>x.id===btn.dataset.id);
-            if(e && e.photoURL) deleteObject(storageRef(storage, e.photoURL)).catch(()=>{});
-            await deleteEventRemote(btn.dataset.id);
-          } catch(e){ console.error(e); }
-        } else {
-          btn.dataset.armed = '1';
-          btn.textContent = 'Confirm?';
-          setTimeout(()=>{ if(btn.isConnected){ btn.dataset.armed='0'; btn.textContent='×'; } }, 2500);
-        }
+    if(!state.readOnly){
+      wrap.querySelectorAll('.fht-entry-del').forEach(btn=>{
+        btn.addEventListener('click', async (ev)=>{
+          ev.stopPropagation();
+          if(btn.dataset.armed==='1'){
+            try{
+              const e = state.events.find(x=>x.id===btn.dataset.id);
+              if(e && e.photoURL) deleteObject(storageRef(storage, e.photoURL)).catch(()=>{});
+              await deleteEventRemote(btn.dataset.id);
+            } catch(e){ console.error(e); }
+          } else {
+            btn.dataset.armed = '1';
+            btn.textContent = 'Confirm?';
+            setTimeout(()=>{ if(btn.isConnected){ btn.dataset.armed='0'; btn.textContent='×'; } }, 2500);
+          }
+        });
       });
-    });
+    }
   }
 
   function openLightbox(url){
@@ -1304,14 +1594,30 @@ const storage = getStorage(firebaseApp);
     }
   }
 
+  function getOngoingMedications(events){
+    return events.filter(e=> e.type==='medication' && e.frequency && isOngoing(e));
+  }
+
   function renderReminders(events){
     const wrap = document.getElementById('fht-reminders');
+    const meds = getOngoingMedications(events);
     const items = getReminders(events).slice(0,5);
-    if(items.length===0){
+    const medsHtml = meds.length ? `
+      <div class="fht-note" style="margin:0 0 4px 0; font-weight:600;">Ongoing medications</div>
+      ${meds.map(m=>{
+        const member = getMember(m.memberId);
+        return `<div class="fht-remind-item"><span>${esc(m.title)} — ${esc(m.frequency)} <span style="color:var(--ink-soft);">— ${esc(member.name)}</span></span></div>`;
+      }).join('')}
+    ` : '';
+    if(items.length===0 && meds.length===0){
       wrap.innerHTML = `<div class="fht-empty" style="padding:14px;">Nothing scheduled right now.</div>`;
       return;
     }
-    wrap.innerHTML = items.map((it,i)=>{
+    if(items.length===0){
+      wrap.innerHTML = medsHtml;
+      return;
+    }
+    wrap.innerHTML = medsHtml + items.map((it,i)=>{
       const member = getMember(it.memberId);
       return `
         <div class="fht-remind-item">
@@ -1361,7 +1667,7 @@ const storage = getStorage(firebaseApp);
       ? { ...existing, photoFile: null, removePhoto: false }
       : { id:null, memberId: state.activeFilter!=='all' ? state.activeFilter : state.household.members[0].id,
           type: presetType || 'illness', title:'', date: todayISO(), detail1:'', detail2:'', notes:'',
-          photoURL: null, photoFile: null, removePhoto: false };
+          photoURL: null, photoFile: null, photoType: null, removePhoto: false, frequency: null };
     renderEventModal();
   }
 
@@ -1408,6 +1714,15 @@ const storage = getStorage(firebaseApp);
         </div>
         <div class="fht-field" id="fht-d1-wrap"></div>
         <div class="fht-field" id="fht-d2-wrap"></div>
+        ${modalState.type==='medication' ? `
+          <div class="fht-field">
+            <label for="fht-m-freq">How often (for ongoing reminders)</label>
+            <select id="fht-m-freq">
+              <option value="">Not tracked</option>
+              ${['Once daily','Twice daily','Three times daily','As needed'].map(f=>`<option value="${f}" ${modalState.frequency===f?'selected':''}>${f}</option>`).join('')}
+            </select>
+          </div>
+        ` : ''}
         <div class="fht-field">
           <label for="fht-m-notes">Notes</label>
           <textarea id="fht-m-notes" placeholder="Any details worth remembering">${esc(modalState.notes)}</textarea>
@@ -1445,6 +1760,9 @@ const storage = getStorage(firebaseApp);
     document.getElementById('fht-m-title').addEventListener('input', e=>{ modalState.title = e.target.value; });
     document.getElementById('fht-m-date').addEventListener('input', e=>{ modalState.date = e.target.value; });
     document.getElementById('fht-m-notes').addEventListener('input', e=>{ modalState.notes = e.target.value; });
+    if(modalState.type==='medication'){
+      document.getElementById('fht-m-freq').addEventListener('change', e=>{ modalState.frequency = e.target.value || null; });
+    }
 
     if(modalState.id){
       document.getElementById('fht-m-delete').addEventListener('click', async (e)=>{
@@ -1477,7 +1795,9 @@ const storage = getStorage(firebaseApp);
         date: modalState.date,
         detail1: modalState.detail1 || '',
         detail2: modalState.detail2 || (modalState.type==='growth' ? '' : null),
-        notes: modalState.notes || ''
+        notes: modalState.notes || '',
+        frequency: modalState.type==='medication' ? (modalState.frequency || null) : null,
+        loggedBy: currentUser ? (currentUser.displayName || currentUser.email || null) : null
       };
       if(modalState.type==='growth'){
         const units = state.household.measurementUnits;
@@ -1499,11 +1819,12 @@ const storage = getStorage(firebaseApp);
           await updateEventRemote(eventId, { photoURL: null });
         }
         if(modalState.photoFile){
-          const path = `households/${state.code}/events/${eventId}/photo-${Date.now()}.jpg`;
+          const isPdf = modalState.photoType==='pdf';
+          const path = `households/${state.code}/events/${eventId}/photo-${Date.now()}.${isPdf?'pdf':'jpg'}`;
           const ref = storageRef(storage, path);
           await uploadBytes(ref, modalState.photoFile);
           const url = await getDownloadURL(ref);
-          await updateEventRemote(eventId, { photoURL: url });
+          await updateEventRemote(eventId, { photoURL: url, photoType: isPdf ? 'pdf' : 'image' });
         }
         closeModal();
       } catch(err){
@@ -1558,10 +1879,15 @@ const storage = getStorage(firebaseApp);
     wrap.innerHTML = `
       ${hasExisting ? `
         <div class="fht-photo-preview">
-          <img src="${modalState.photoURL}" alt="" />
-          <button type="button" class="fht-btn-text fht-btn-danger" id="fht-photo-remove">Remove photo</button>
+          ${modalState.photoType==='pdf'
+            ? `<a href="${modalState.photoURL}" target="_blank" rel="noopener" class="fht-doc-chip">📄 View PDF</a>`
+            : `<img src="${modalState.photoURL}" alt="" />`}
+          <button type="button" class="fht-btn-text fht-btn-danger" id="fht-photo-remove">Remove</button>
         </div>
-      ` : `<input type="file" accept="image/*" id="fht-photo-input" />`}
+      ` : `
+        <input type="file" accept="image/*,application/pdf" id="fht-photo-input" />
+        <p class="fht-note">Photos or PDFs (insurance cards, after-visit summaries, etc.)</p>
+      `}
     `;
     if(hasExisting){
       document.getElementById('fht-photo-remove').addEventListener('click', ()=>{
@@ -1570,7 +1896,9 @@ const storage = getStorage(firebaseApp);
       });
     } else {
       document.getElementById('fht-photo-input').addEventListener('change', e=>{
-        modalState.photoFile = e.target.files[0] || null;
+        const file = e.target.files[0] || null;
+        modalState.photoFile = file;
+        modalState.photoType = file && file.type==='application/pdf' ? 'pdf' : 'image';
       });
     }
   }
@@ -1590,11 +1918,41 @@ const storage = getStorage(firebaseApp);
   ];
 
   function openPeopleModal(){
+    if(state.readOnly){
+      renderPeopleModalReadOnly();
+      return;
+    }
     peopleDraft = {
       measurementUnits: state.household.measurementUnits,
-      members: state.household.members.map(m=>({ ...m, care: { ...(m.care||{}) } }))
+      members: state.household.members.map(m=>({ ...m, care: { ...(m.care||{}) }, conditions: [...(m.conditions||[])] }))
     };
     renderPeopleModal();
+  }
+
+  function renderPeopleModalReadOnly(){
+    const overlay = document.createElement('div');
+    overlay.className = 'fht-overlay';
+    overlay.id = 'fht-people-overlay';
+    overlay.innerHTML = `
+      <div class="fht-modal">
+        <h2>People &amp; care</h2>
+        <p class="fht-note">Viewing only — you don't have permission to make changes.</p>
+        ${state.household.members.map(m=>`
+          <div class="fht-people-block">
+            <div class="fht-people-row"><span class="fht-dot" style="background:${m.color}; width:14px; height:14px; display:inline-block; border-radius:50%; margin-right:8px;"></span><strong>${esc(m.name)}</strong></div>
+            ${m.birthdate ? `<div class="fht-note">Born ${fmtDate(m.birthdate)}</div>` : ''}
+            ${(m.conditions||[]).length ? `<div class="fht-condition-tags">${m.conditions.map(c=>`<span class="fht-condition-tag fht-condition-${c.type}">${esc(c.label)}</span>`).join('')}</div>` : ''}
+            ${CARE_FIELDS.filter(([key])=>m.care && m.care[key]).map(([key,label])=>`<div class="fht-note">${label}: ${esc(m.care[key])}</div>`).join('')}
+          </div>
+        `).join('')}
+        <div class="fht-modal-actions">
+          <button class="fht-btn" id="fht-people-ro-close">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+    document.getElementById('fht-people-ro-close').addEventListener('click', ()=> overlay.remove());
   }
 
   function renderPeopleModal(){
@@ -1637,6 +1995,19 @@ const storage = getStorage(firebaseApp);
             <label for="fht-bd-${i}">Birthdate</label>
             <input type="date" id="fht-bd-${i}" data-idx="${i}" class="fht-people-bd" value="${m.birthdate||''}" />
           </div>
+          <div class="fht-condition-tags">
+            ${(m.conditions||[]).map((c,ci)=>`
+              <span class="fht-condition-tag fht-condition-${c.type}">${esc(c.label)}<button type="button" class="fht-condition-remove" data-idx="${i}" data-ci="${ci}">&times;</button></span>
+            `).join('')}
+          </div>
+          <div class="fht-condition-add">
+            <select class="fht-condition-type" data-idx="${i}">
+              <option value="allergy">Allergy</option>
+              <option value="condition">Condition</option>
+            </select>
+            <input type="text" class="fht-condition-input" data-idx="${i}" placeholder="e.g. Peanut allergy, Asthma" />
+            <button type="button" class="fht-btn-text fht-condition-addbtn" data-idx="${i}">+ Add</button>
+          </div>
           <button type="button" class="fht-care-toggle" data-idx="${i}">${m._careOpen ? 'Hide care info ▲' : 'Care & insurance info ▾'}</button>
           ${m._careOpen ? `
             <div class="fht-care-grid">
@@ -1655,6 +2026,26 @@ const storage = getStorage(firebaseApp);
       });
       document.querySelectorAll('.fht-people-bd').forEach(inp=>{
         inp.addEventListener('change', e=>{ peopleDraft.members[+e.target.dataset.idx].birthdate = e.target.value || null; });
+      });
+      document.querySelectorAll('.fht-condition-addbtn').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const idx = +e.target.dataset.idx;
+          const row = e.target.closest('.fht-people-block');
+          const input = row.querySelector('.fht-condition-input');
+          const typeSel = row.querySelector('.fht-condition-type');
+          const label = input.value.trim();
+          if(!label) return;
+          if(!peopleDraft.members[idx].conditions) peopleDraft.members[idx].conditions = [];
+          peopleDraft.members[idx].conditions.push({ id: uidLocal(), label, type: typeSel.value });
+          renderRows();
+        });
+      });
+      document.querySelectorAll('.fht-condition-remove').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const idx = +e.target.dataset.idx, ci = +e.target.dataset.ci;
+          peopleDraft.members[idx].conditions.splice(ci,1);
+          renderRows();
+        });
       });
       document.querySelectorAll('.fht-care-toggle').forEach(btn=>{
         btn.addEventListener('click', e=>{
@@ -1678,7 +2069,7 @@ const storage = getStorage(firebaseApp);
     document.getElementById('fht-people-cancel').addEventListener('click', closePeopleModal);
     document.getElementById('fht-people-add').addEventListener('click', ()=>{
       if(peopleDraft.members.length>=8) return;
-      peopleDraft.members.push({ id: uidLocal(), name:'', color: PALETTE[peopleDraft.members.length % PALETTE.length], birthdate:null, care:{} });
+      peopleDraft.members.push({ id: uidLocal(), name:'', color: PALETTE[peopleDraft.members.length % PALETTE.length], birthdate:null, care:{}, conditions:[] });
       renderRows();
     });
     document.getElementById('fht-people-save').addEventListener('click', async ()=>{
@@ -1711,6 +2102,42 @@ const storage = getStorage(firebaseApp);
 
   /* ---------------- Init ---------------- */
   async function init(){
+    const params = new URLSearchParams(location.search);
+    const urlCode = params.get('code');
+    const isViewLink = params.get('view')==='1';
+    history.replaceState({}, '', location.pathname);
+
+    if(urlCode){
+      try{
+        if(isViewLink){
+          const voSnap = await getDoc(doc(db,'viewOnlyCodes',urlCode.toUpperCase()));
+          if(!voSnap.exists()){ renderGate('missing'); return; }
+          const familyCode = voSnap.data().familyCode;
+          const hSnap = await getDoc(householdRef(familyCode));
+          if(!hSnap.exists()){ renderGate('missing'); return; }
+          state.code = familyCode;
+          state.readOnly = true;
+          localStorage.setItem(CODE_KEY, familyCode);
+          localStorage.setItem(READONLY_KEY, '1');
+          startListening();
+          return;
+        } else {
+          const snap = await getDoc(householdRef(urlCode.toUpperCase()));
+          if(!snap.exists()){ renderGate('missing'); return; }
+          state.code = urlCode.toUpperCase();
+          state.readOnly = false;
+          localStorage.setItem(CODE_KEY, urlCode.toUpperCase());
+          localStorage.removeItem(READONLY_KEY);
+          startListening();
+          return;
+        }
+      } catch(e){
+        console.error(e);
+        renderGate('error');
+        return;
+      }
+    }
+
     const savedCode = localStorage.getItem(CODE_KEY);
     if(!savedCode){
       renderGate();
@@ -1724,6 +2151,7 @@ const storage = getStorage(firebaseApp);
         return;
       }
       state.code = savedCode;
+      state.readOnly = localStorage.getItem(READONLY_KEY)==='1';
       startListening();
     } catch(e){
       console.error(e);

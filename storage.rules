@@ -7,7 +7,7 @@ service firebase.storage {
       allow read: if code.size() >= 8;
       allow write: if code.size() >= 8
                    && request.resource.size < 8 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
+                   && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
     }
   }
 }

@@ -12,5 +12,16 @@ service cloud.firestore {
         allow read, write: if code.size() >= 8;
       }
     }
+
+    // Maps a view-only code to its full family code. Same "shared secret"
+    // model as households above: anyone who has the exact code can read
+    // (or create) the mapping, but the code itself is never in the public
+    // source and is only known to people it was shared with. This is a
+    // convenience/UI-level restriction, not a cryptographic access boundary —
+    // whoever resolves this mapping gets the same database permissions as
+    // anyone with the full family code.
+    match /viewOnlyCodes/{voCode} {
+      allow read, write: if voCode.size() >= 8;
+    }
   }
 }
