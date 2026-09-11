@@ -103,6 +103,33 @@ matters.)
 Everyone who joins with the same code sees the same timeline, charts, and
 reminders, and changes sync automatically without needing to refresh.
 
+## 7. New in this version: photos require Firebase Storage
+
+This version adds growth charts, a vaccine schedule, care/insurance info,
+calendar export, CSV export, full backup/restore, and installable-app (PWA)
+support — those all work with what you already set up. Photo attachments on
+events need one more piece: Firebase Storage.
+
+1. In the Firebase console for your project, go to **Build → Storage** and
+   click **Get started**, accepting the defaults.
+2. From your project folder in Terminal:
+   ```
+   firebase init storage
+   ```
+   When it asks for a rules file, point it at (or don't overwrite) the
+   `storage.rules` in this folder.
+3. Deploy the storage rules:
+   ```
+   firebase deploy --only storage
+   ```
+4. Commit and push the new files (`manifest.json`, `sw.js`, `storage.rules`,
+   the `icons/` folder, and the updated `index.html`), same as before:
+   ```
+   git add index.html manifest.json sw.js storage.rules icons
+   git commit -m "Add growth charts, vaccine schedule, care info, photos, export/backup, PWA"
+   git push
+   ```
+
 ## Troubleshooting
 
 - **"Couldn't connect" on first load** — double check the `firebaseConfig`

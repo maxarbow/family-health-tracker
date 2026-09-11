@@ -1,0 +1,13 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Photos live at households/{code}/events/{eventId}/{fileName}
+    // Same protection model as Firestore: the family code is the shared secret.
+    match /households/{code}/events/{eventId}/{fileName} {
+      allow read: if code.size() >= 8;
+      allow write: if code.size() >= 8
+                   && request.resource.size < 8 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

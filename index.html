@@ -4,6 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Family Health Record</title>
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2E4A52" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Health Record" />
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -25,6 +30,8 @@
     --med-bg: #E2E8D2;
     --vax: #3D7089;
     --vax-bg: #DAE7EB;
+    --growth: #7C5C82;
+    --growth-bg: #E8DEEA;
 
     --radius: 10px;
   }
@@ -337,6 +344,72 @@
   .fht-people-row input[type=text]{ flex:1; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; }
 
   .fht-loading{ padding: 80px 20px; text-align:center; color: var(--ink-soft); }
+
+  /* ---------- Header dropdown (Data menu) ---------- */
+  .fht-dropdown-wrap{ position: relative; }
+  .fht-dropdown{
+    position: absolute; right: 0; top: calc(100% + 6px);
+    background: var(--paper-light); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(30,26,20,0.12); min-width: 220px; padding: 6px; z-index: 200;
+  }
+  .fht-dropdown button{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    padding: 9px 10px; border-radius: 7px; cursor:pointer; font-size: 13.5px; color: var(--ink);
+  }
+  .fht-dropdown button:hover{ background: var(--teal-tint); }
+  .fht-dropdown hr{ border:none; border-top:1px solid var(--line); margin: 6px 2px; }
+
+  /* ---------- Photos ---------- */
+  .fht-thumb{
+    width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+    border: 1px solid var(--line); cursor: pointer; flex-shrink: 0;
+  }
+  .fht-photo-preview{ margin-top: 8px; display:flex; align-items:center; gap:10px; }
+  .fht-photo-preview img{ width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border:1px solid var(--line); }
+  .fht-lightbox{
+    position: fixed; inset:0; background: rgba(20,17,13,0.85); z-index: 1100;
+    display:flex; align-items:center; justify-content:center; padding: 24px; cursor: zoom-out;
+  }
+  .fht-lightbox img{ max-width: 92vw; max-height: 92vh; border-radius: 10px; }
+
+  /* ---------- Growth panel ---------- */
+  .fht-growth-stat{ display:flex; gap: 18px; margin-bottom: 10px; flex-wrap: wrap; }
+  .fht-growth-stat div{ font-size: 12.5px; color: var(--ink-soft); }
+  .fht-growth-stat span{ display:block; font-family:'Fraunces', serif; font-size: 20px; color: var(--ink); font-weight:600; }
+
+  /* ---------- Vaccine schedule ---------- */
+  .fht-vax-row{
+    display:flex; justify-content: space-between; align-items:center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .fht-vax-row:last-child{ border-bottom:none; }
+  .fht-vax-name{ font-weight: 600; font-size: 13.5px; }
+  .fht-vax-sub{ font-size: 12px; color: var(--ink-soft); margin-top:2px; }
+  .fht-badge{ font-size: 11.5px; font-weight:700; padding: 3px 9px; border-radius: 999px; white-space:nowrap; }
+  .fht-badge-done{ background: var(--med-bg); color: var(--med); }
+  .fht-badge-due{ background: var(--appt-bg); color: var(--appt); }
+  .fht-badge-overdue{ background: var(--illness-bg); color: var(--illness); }
+  .fht-badge-future{ background: var(--teal-tint); color: var(--teal); }
+
+  /* ---------- Care team fields inside People modal ---------- */
+  .fht-care-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 14px 46px; }
+  .fht-care-grid input{ padding: 7px 9px; border:1px solid var(--line); border-radius: 7px; font-size: 13px; }
+  .fht-people-block{ border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 12px; }
+  .fht-people-block:last-child{ border-bottom:none; }
+  .fht-care-toggle{ margin-left: 46px; font-size:12px; color:var(--teal); background:none; border:none; cursor:pointer; font-weight:600; padding: 2px 0; }
+  .fht-birthdate-row{ margin: 8px 0 4px 46px; display:flex; align-items:center; gap:8px; }
+  .fht-birthdate-row label{ font-size:12px; color:var(--ink-soft); }
+  .fht-birthdate-row input{ padding:6px 8px; border:1px solid var(--line); border-radius:7px; font-size:13px; }
+
+  @media print{
+    body *{ visibility: hidden; }
+    #fht-print-area, #fht-print-area *{ visibility: visible; }
+    #fht-print-area{ position: absolute; left:0; top:0; width:100%; padding: 20px; }
+    .fht-print-title{ font-family:'Fraunces',serif; font-size: 22px; margin-bottom:4px; }
+    .fht-print-sub{ color:#666; font-size:12px; margin-bottom:18px; }
+    .fht-print-entry{ padding: 6px 0; border-bottom: 1px solid #ccc; font-size: 12.5px; }
+  }
+  #fht-print-area{ display:none; }
 </style>
 </head>
 <body>
@@ -347,8 +420,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
   getFirestore, doc, getDoc, setDoc, updateDoc,
-  collection, addDoc, deleteDoc, onSnapshot
+  collection, addDoc, deleteDoc, onSnapshot, getDocs, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import {
+  getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-storage.js";
 
 /* =========================================================
    1. PASTE YOUR FIREBASE CONFIG HERE (see README.md)
@@ -364,9 +440,18 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
 
 (function(){
   const root = document.getElementById('fht-root');
+
+  document.addEventListener('click', (e)=>{
+    const menu = document.getElementById('fht-data-menu');
+    const wrap = document.querySelector('.fht-dropdown-wrap');
+    if(menu && menu.style.display!=='none' && wrap && !wrap.contains(e.target)){
+      menu.style.display = 'none';
+    }
+  });
   const CODE_KEY = 'fht-family-code';
 
   const PALETTE = ['#AD4C4C','#B47F26','#5B7A45','#3D7089','#7A5C8F','#3E5C7A','#946B3D','#4C7A6A'];
@@ -388,7 +473,17 @@ const db = getFirestore(firebaseApp);
                    titlePh:'e.g. Flu shot',
                    d1Label:'Given by', d1Type:'text',
                    d2Label:'Next dose due', d2Type:'date' },
+    growth:      { label:'Growth',      shape:'✚', color:'var(--growth)', bg:'var(--growth-bg)', hex:'#7C5C82',
+                   titlePh:'e.g. 12-month checkup',
+                   d1Label:'Height', d1Type:'number',
+                   d2Label:'Weight', d2Type:'number' },
   };
+
+  function unitSuffix(){ return state.household.measurementUnits==='metric' ? { h:'cm', w:'kg' } : { h:'in', w:'lb' }; }
+  function toCm(v, units){ return units==='metric' ? v : v*2.54; }
+  function toKg(v, units){ return units==='metric' ? v : v*0.453592; }
+  function fromCm(cm, units){ return units==='metric' ? cm : cm/2.54; }
+  function fromKg(kg, units){ return units==='metric' ? kg : kg/0.453592; }
 
   let state = { code: null, household: null, events: [], activeFilter: 'all' };
   let modalState = null;
@@ -435,7 +530,7 @@ const db = getFirestore(firebaseApp);
     await setDoc(householdRef(state.code), state.household, { merge: true });
   }
   async function addEventRemote(fields){
-    await addDoc(eventsRef(state.code), { ...fields, createdAt: Date.now() });
+    return await addDoc(eventsRef(state.code), { ...fields, createdAt: Date.now() });
   }
   async function updateEventRemote(id, fields){
     await updateDoc(eventRef(state.code, id), fields);
@@ -455,6 +550,8 @@ const db = getFirestore(firebaseApp);
         return;
       }
       state.household = snap.data();
+      if(!state.household.measurementUnits) state.household.measurementUnits = 'imperial';
+      state.household.members.forEach(m=>{ if(m.birthdate===undefined) m.birthdate=null; if(!m.care) m.care={}; });
       if(state.activeFilter!=='all' && !state.household.members.find(m=>m.id===state.activeFilter)){
         state.activeFilter = 'all';
       }
@@ -640,7 +737,8 @@ const db = getFirestore(firebaseApp);
       }
       const household = {
         name,
-        members: d.members.map(m=>({ id: uidLocal(), name: m.name.trim(), color: m.color }))
+        measurementUnits: 'imperial',
+        members: d.members.map(m=>({ id: uidLocal(), name: m.name.trim(), color: m.color, birthdate: null, care: {} }))
       };
       try{
         await createHousehold(d.code, household);
@@ -689,6 +787,263 @@ const db = getFirestore(firebaseApp);
     return { thisMonth, active, upcoming, members: state.household.members.length };
   }
 
+  // Simplified general reference schedule (major US childhood vaccines), not medical advice.
+  const VACCINE_SCHEDULE = [
+    { name:'Hepatitis B (dose 1)', ageMonths:0 },
+    { name:'Hepatitis B (dose 2)', ageMonths:1 },
+    { name:'DTaP (dose 1)', ageMonths:2 },
+    { name:'Hib (dose 1)', ageMonths:2 },
+    { name:'Polio/IPV (dose 1)', ageMonths:2 },
+    { name:'PCV13 (dose 1)', ageMonths:2 },
+    { name:'Rotavirus (dose 1)', ageMonths:2 },
+    { name:'DTaP (dose 2)', ageMonths:4 },
+    { name:'Hib (dose 2)', ageMonths:4 },
+    { name:'Polio/IPV (dose 2)', ageMonths:4 },
+    { name:'PCV13 (dose 2)', ageMonths:4 },
+    { name:'Rotavirus (dose 2)', ageMonths:4 },
+    { name:'DTaP (dose 3)', ageMonths:6 },
+    { name:'Hepatitis B (dose 3)', ageMonths:6 },
+    { name:'PCV13 (dose 3)', ageMonths:6 },
+    { name:'Flu shot (annual, starting at 6mo)', ageMonths:6 },
+    { name:'MMR (dose 1)', ageMonths:12 },
+    { name:'Varicella (dose 1)', ageMonths:12 },
+    { name:'Hepatitis A (dose 1)', ageMonths:12 },
+    { name:'PCV13 (dose 4)', ageMonths:12 },
+    { name:'Hib (dose 3)', ageMonths:12 },
+    { name:'Hepatitis A (dose 2)', ageMonths:18 },
+    { name:'DTaP (dose 4)', ageMonths:18 },
+    { name:'DTaP (dose 5)', ageMonths:60 },
+    { name:'Polio/IPV (dose 4)', ageMonths:60 },
+    { name:'MMR (dose 2)', ageMonths:60 },
+    { name:'Varicella (dose 2)', ageMonths:60 },
+    { name:'Tdap booster', ageMonths:132 },
+    { name:'HPV (dose 1)', ageMonths:132 },
+    { name:'Meningococcal (dose 1)', ageMonths:132 },
+  ];
+
+  function addMonths(dateStr, months){
+    const d = new Date(dateStr+'T00:00:00');
+    d.setMonth(d.getMonth()+months);
+    return d;
+  }
+
+  function renderGrowthPanel(){
+    const panel = document.getElementById('fht-growth-panel');
+    if(!panel) return;
+    if(charts.height) { charts.height.destroy(); charts.height = null; }
+    if(charts.weight) { charts.weight.destroy(); charts.weight = null; }
+    if(state.activeFilter==='all'){
+      panel.innerHTML = `<div class="fht-section-head"><h2>Growth</h2></div><div class="fht-empty" style="padding:14px;">Select a person above to see their growth chart.</div>`;
+      return;
+    }
+    const member = getMember(state.activeFilter);
+    const entries = state.events
+      .filter(e=>e.type==='growth' && e.memberId===state.activeFilter && (e.heightCm || e.weightKg))
+      .sort((a,b)=> new Date(a.date)-new Date(b.date));
+    if(entries.length===0){
+      panel.innerHTML = `<div class="fht-section-head"><h2>Growth</h2></div><div class="fht-empty" style="padding:14px;">No growth measurements logged for ${esc(member.name)} yet.</div>`;
+      return;
+    }
+    const units = state.household.measurementUnits;
+    const latest = entries[entries.length-1];
+    const latestBmi = (latest.heightCm && latest.weightKg) ? (latest.weightKg/((latest.heightCm/100)**2)).toFixed(1) : null;
+    panel.innerHTML = `
+      <div class="fht-section-head"><h2>Growth — ${esc(member.name)}</h2></div>
+      <div class="fht-growth-stat">
+        ${latest.heightCm ? `<div>Latest height<span>${fromCm(latest.heightCm, units).toFixed(1)} ${unitSuffix().h}</span></div>` : ''}
+        ${latest.weightKg ? `<div>Latest weight<span>${fromKg(latest.weightKg, units).toFixed(1)} ${unitSuffix().w}</span></div>` : ''}
+        ${latestBmi ? `<div>BMI<span>${latestBmi}</span></div>` : ''}
+      </div>
+      <canvas id="fht-chart-height" height="120"></canvas>
+      <div style="height:14px;"></div>
+      <canvas id="fht-chart-weight" height="120"></canvas>
+      <p class="fht-note" style="margin-top:10px;">BMI shown for reference only — ask your pediatrician about percentile ranges for your child's age.</p>
+    `;
+    const labels = entries.map(e=>fmtDate(e.date));
+    charts.height = new Chart(document.getElementById('fht-chart-height').getContext('2d'), {
+      type:'line',
+      data:{ labels, datasets:[{ label:`Height (${unitSuffix().h})`, data: entries.map(e=>e.heightCm?Math.round(fromCm(e.heightCm,units)*10)/10:null), borderColor:'#7C5C82', backgroundColor:'#7C5C82', tension:0.3 }] },
+      options:{ plugins:{ legend:{ labels:{ color:'#7A7061', font:{family:'Inter'} } } }, scales:{ x:{ ticks:{ color:'#7A7061', font:{family:'Inter'} }, grid:{ display:false } }, y:{ ticks:{ color:'#7A7061', font:{family:'Inter'} }, grid:{ color:'#DDD1B4' } } } }
+    });
+    charts.weight = new Chart(document.getElementById('fht-chart-weight').getContext('2d'), {
+      type:'line',
+      data:{ labels, datasets:[{ label:`Weight (${unitSuffix().w})`, data: entries.map(e=>e.weightKg?Math.round(fromKg(e.weightKg,units)*10)/10:null), borderColor:'#3D7089', backgroundColor:'#3D7089', tension:0.3 }] },
+      options:{ plugins:{ legend:{ labels:{ color:'#7A7061', font:{family:'Inter'} } } }, scales:{ x:{ ticks:{ color:'#7A7061', font:{family:'Inter'} }, grid:{ display:false } }, y:{ ticks:{ color:'#7A7061', font:{family:'Inter'} }, grid:{ color:'#DDD1B4' } } } }
+    });
+  }
+
+  /* ---------------- Vaccine schedule modal ---------------- */
+  function openVaccineModal(){
+    const overlay = document.createElement('div');
+    overlay.className = 'fht-overlay';
+    overlay.id = 'fht-vax-overlay';
+    const defaultMember = state.activeFilter!=='all' ? state.activeFilter : state.household.members[0].id;
+    overlay.innerHTML = `
+      <div class="fht-modal">
+        <h2>Vaccine schedule</h2>
+        <div class="fht-field">
+          <label for="fht-vax-member">Person</label>
+          <select id="fht-vax-member">
+            ${state.household.members.map(m=>`<option value="${m.id}" ${m.id===defaultMember?'selected':''}>${esc(m.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div id="fht-vax-birthdate-wrap"></div>
+        <div id="fht-vax-list" style="margin-top:10px;"></div>
+        <p class="fht-note">General reference schedule based on common US pediatric guidance — always confirm timing with your child's doctor.</p>
+        <div class="fht-modal-actions">
+          <button class="fht-btn" id="fht-vax-close">Close</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.remove(); });
+    document.getElementById('fht-vax-close').addEventListener('click', ()=> overlay.remove());
+    document.getElementById('fht-vax-member').addEventListener('change', renderVaxList);
+    renderVaxList();
+
+    function renderVaxList(){
+      const memberId = document.getElementById('fht-vax-member').value;
+      const member = getMember(memberId);
+      const bdWrap = document.getElementById('fht-vax-birthdate-wrap');
+      const listWrap = document.getElementById('fht-vax-list');
+      if(!member.birthdate){
+        bdWrap.innerHTML = `
+          <div class="fht-field">
+            <label for="fht-vax-bd">${esc(member.name)}'s birthdate (needed to estimate due dates)</label>
+            <input type="date" id="fht-vax-bd" />
+          </div>
+        `;
+        document.getElementById('fht-vax-bd').addEventListener('change', async (e)=>{
+          const m = state.household.members.find(x=>x.id===memberId);
+          m.birthdate = e.target.value;
+          await saveHouseholdRemote();
+          renderVaxList();
+        });
+        listWrap.innerHTML = '';
+        return;
+      }
+      bdWrap.innerHTML = `<p class="fht-note">Birthdate: ${fmtDate(member.birthdate)} (edit in People &amp; care)</p>`;
+      const loggedTitles = state.events.filter(e=>e.type==='vaccine' && e.memberId===memberId).map(e=>({ title:e.title.toLowerCase(), date:e.date }));
+      const today = startOfToday();
+      listWrap.innerHTML = VACCINE_SCHEDULE.map(item=>{
+        const due = addMonths(member.birthdate, item.ageMonths);
+        const match = loggedTitles.find(l=> l.title.includes(item.name.split(' (')[0].toLowerCase()) );
+        let badge, sub;
+        if(match){
+          badge = `<span class="fht-badge fht-badge-done">Logged</span>`;
+          sub = `Logged on ${fmtDate(match.date)}`;
+        } else if(due < today){
+          badge = `<span class="fht-badge fht-badge-overdue">Overdue</span>`;
+          sub = `Was due around ${due.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+        } else if(due <= new Date(today.getTime()+30*86400000)){
+          badge = `<span class="fht-badge fht-badge-due">Due soon</span>`;
+          sub = `Due around ${due.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+        } else {
+          badge = `<span class="fht-badge fht-badge-future">Upcoming</span>`;
+          sub = `Expected around ${due.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})}`;
+        }
+        return `
+          <div class="fht-vax-row">
+            <div>
+              <div class="fht-vax-name">${esc(item.name)}</div>
+              <div class="fht-vax-sub">${sub}</div>
+            </div>
+            ${match ? badge : `<div style="display:flex; align-items:center; gap:8px;">${badge}<button class="fht-btn-text" data-name="${esc(item.name)}" data-member="${memberId}">Log now</button></div>`}
+          </div>
+        `;
+      }).join('');
+      listWrap.querySelectorAll('button[data-name]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          overlay.remove();
+          modalDeleteArm = false;
+          modalState = {
+            id:null, memberId: btn.dataset.member, type:'vaccine', title: btn.dataset.name,
+            date: todayISO(), detail1:'', detail2:'', notes:'',
+            photoURL:null, photoFile:null, removePhoto:false
+          };
+          renderEventModal();
+        });
+      });
+    }
+  }
+
+  /* ---------------- Export / backup ---------------- */
+  function exportCSV(){
+    const rows = [['Date','Person','Type','Title','Detail 1','Detail 2','Notes']];
+    [...state.events].sort((a,b)=> new Date(a.date)-new Date(b.date)).forEach(e=>{
+      const member = getMember(e.memberId);
+      rows.push([e.date, member.name, TYPE_CONFIG[e.type].label, e.title, e.detail1||'', e.detail2||'', e.notes||'']);
+    });
+    const csv = rows.map(r=> r.map(cell=>{
+      const s = String(cell==null?'':cell);
+      return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+    }).join(',')).join('\r\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${state.household.name.replace(/[^a-z0-9]+/gi,'-')}-health-events.csv`;
+    a.click();
+    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+  }
+
+  function printRecord(){
+    const area = document.getElementById('fht-print-area');
+    const sorted = [...state.events].sort((a,b)=> new Date(b.date)-new Date(a.date));
+    area.innerHTML = `
+      <div class="fht-print-title">${esc(state.household.name)} — Health Record</div>
+      <div class="fht-print-sub">Printed ${new Date().toLocaleDateString()}</div>
+      ${sorted.map(e=>{
+        const member = getMember(e.memberId);
+        const cfg = TYPE_CONFIG[e.type];
+        return `<div class="fht-print-entry"><strong>${fmtDate(e.date)}</strong> — ${esc(member.name)} — ${cfg.label}: ${esc(e.title)}${e.detail1?` (${esc(e.detail1)})`:''}${e.notes?` — ${esc(e.notes)}`:''}</div>`;
+      }).join('')}
+    `;
+    window.print();
+  }
+
+  async function exportBackup(){
+    const data = { exportedAt: new Date().toISOString(), household: state.household, events: state.events };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${state.household.name.replace(/[^a-z0-9]+/gi,'-')}-backup-${todayISO()}.json`;
+    a.click();
+    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+  }
+
+  async function handleRestoreFile(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    e.target.value = '';
+    try{
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if(!data.household || !Array.isArray(data.events)) throw new Error('Unrecognized backup file');
+      const proceed = confirm(`This will REPLACE all current data for "${state.household.name}" with the backup (${data.events.length} events). This cannot be undone. Continue?`);
+      if(!proceed) return;
+      await setDoc(householdRef(state.code), data.household);
+      const existing = await getDocs(eventsRef(state.code));
+      let batch = writeBatch(db);
+      let opCount = 0;
+      for(const d of existing.docs){
+        batch.delete(d.ref);
+        opCount++;
+        if(opCount>=450){ await batch.commit(); batch = writeBatch(db); opCount=0; }
+      }
+      for(const ev of data.events){
+        const { id, ...fields } = ev;
+        batch.set(id ? eventRef(state.code, id) : doc(eventsRef(state.code)), fields);
+        opCount++;
+        if(opCount>=450){ await batch.commit(); batch = writeBatch(db); opCount=0; }
+      }
+      if(opCount>0) await batch.commit();
+      alert('Backup restored.');
+    } catch(err){
+      console.error(err);
+      alert("Could not restore that file — make sure it's a backup downloaded from this app.");
+    }
+  }
+
   /* ---------------- Main app render ---------------- */
   function renderApp(){
     const filtered = state.activeFilter==='all'
@@ -704,7 +1059,19 @@ const db = getFirestore(firebaseApp);
             <div class="fht-tag">Family code: ${state.code} <button id="fht-copy-code" type="button">Copy</button><button id="fht-switch" type="button">Switch family</button></div>
           </div>
           <div class="fht-header-actions">
-            <button class="fht-btn" id="fht-btn-people">People</button>
+            <button class="fht-btn" id="fht-btn-people">People &amp; care</button>
+            <button class="fht-btn" id="fht-btn-vax">Vaccines</button>
+            <div class="fht-dropdown-wrap">
+              <button class="fht-btn" id="fht-btn-data">Data ▾</button>
+              <div class="fht-dropdown" id="fht-data-menu" style="display:none;">
+                <button id="fht-data-csv">Export as CSV</button>
+                <button id="fht-data-print">Print / save as PDF</button>
+                <hr />
+                <button id="fht-data-backup">Download full backup</button>
+                <button id="fht-data-restore">Restore from backup…</button>
+                <input type="file" accept="application/json" id="fht-restore-input" style="display:none;" />
+              </div>
+            </div>
             <button class="fht-btn fht-btn-primary" id="fht-btn-add">+ Log event</button>
           </div>
         </div>
@@ -733,27 +1100,43 @@ const db = getFirestore(firebaseApp);
             <div class="fht-section-head"><h2 id="fht-second-title">By person</h2></div>
             <canvas id="fht-chart-second" height="180"></canvas>
           </div>
+          <div class="fht-panel" id="fht-growth-panel"></div>
           <div class="fht-panel">
             <div class="fht-section-head"><h2>Coming up</h2></div>
             <div id="fht-reminders"></div>
           </div>
         </div>
       </div>
+      <div id="fht-print-area"></div>
     `;
 
     renderPills();
     renderTimeline(filtered);
     renderMonthlyChart(filtered);
     renderSecondChart(filtered);
+    renderGrowthPanel();
     renderReminders(filtered);
 
     document.getElementById('fht-btn-add').addEventListener('click', ()=>openEventModal());
     document.getElementById('fht-btn-people').addEventListener('click', ()=>openPeopleModal());
+    document.getElementById('fht-btn-vax').addEventListener('click', ()=>openVaccineModal());
     document.getElementById('fht-switch').addEventListener('click', switchFamily);
     document.getElementById('fht-copy-code').addEventListener('click', async (e)=>{
       try{ await navigator.clipboard.writeText(state.code); e.target.textContent='Copied'; setTimeout(()=>{ e.target.textContent='Copy'; }, 1500); }
       catch(err){ /* clipboard may be unavailable; ignore */ }
     });
+
+    const dataBtn = document.getElementById('fht-btn-data');
+    const dataMenu = document.getElementById('fht-data-menu');
+    dataBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      dataMenu.style.display = dataMenu.style.display==='none' ? 'block' : 'none';
+    });
+    document.getElementById('fht-data-csv').addEventListener('click', exportCSV);
+    document.getElementById('fht-data-print').addEventListener('click', printRecord);
+    document.getElementById('fht-data-backup').addEventListener('click', exportBackup);
+    document.getElementById('fht-data-restore').addEventListener('click', ()=> document.getElementById('fht-restore-input').click());
+    document.getElementById('fht-restore-input').addEventListener('change', handleRestoreFile);
   }
 
   function renderPills(){
@@ -791,16 +1174,28 @@ const db = getFirestore(firebaseApp);
       }
       const cfg = TYPE_CONFIG[e.type];
       const member = getMember(e.memberId);
+      let detailLine = '';
+      if(e.type==='growth'){
+        const u = unitSuffix();
+        const parts = [];
+        if(e.detail1) parts.push(`Height: ${esc(e.detail1)} ${u.h}`);
+        if(e.detail2) parts.push(`Weight: ${esc(e.detail2)} ${u.w}`);
+        if(e.heightCm && e.weightKg) parts.push(`BMI: ${(e.weightKg/((e.heightCm/100)**2)).toFixed(1)}`);
+        detailLine = parts.length ? `<div class="fht-entry-detail">${parts.join(' · ')}</div>` : '';
+      } else if(e.detail1){
+        detailLine = `<div class="fht-entry-detail">${cfg.d1Label}: ${esc(e.detail1)}</div>`;
+      }
       html += `
         <div class="fht-entry" style="--type-color:${cfg.hex}" data-id="${e.id}">
           <div class="fht-shape">${cfg.shape}</div>
+          ${e.photoURL ? `<img class="fht-thumb" src="${e.photoURL}" alt="" data-lightbox="${e.photoURL}" />` : ''}
           <div class="fht-entry-body">
             <div class="fht-entry-top">
               <span class="fht-entry-title">${esc(e.title)}</span>
               <span class="fht-chip"><span class="fht-dot" style="background:${member.color}"></span>${esc(member.name)}</span>
               <span class="fht-entry-date">${fmtDate(e.date)}</span>
             </div>
-            ${e.detail1 ? `<div class="fht-entry-detail">${cfg.d1Label}: ${esc(e.detail1)}</div>` : ''}
+            ${detailLine}
             ${e.notes ? `<div class="fht-entry-notes">${esc(e.notes)}</div>` : ''}
           </div>
           <button class="fht-entry-del" data-id="${e.id}" title="Delete">&times;</button>
@@ -811,6 +1206,7 @@ const db = getFirestore(firebaseApp);
     wrap.querySelectorAll('.fht-entry').forEach(row=>{
       row.addEventListener('click', (ev)=>{
         if(ev.target.classList.contains('fht-entry-del')) return;
+        if(ev.target.dataset.lightbox){ openLightbox(ev.target.dataset.lightbox); return; }
         const e = state.events.find(x=>x.id===row.dataset.id);
         openEventModal(e);
       });
@@ -819,7 +1215,11 @@ const db = getFirestore(firebaseApp);
       btn.addEventListener('click', async (ev)=>{
         ev.stopPropagation();
         if(btn.dataset.armed==='1'){
-          try{ await deleteEventRemote(btn.dataset.id); } catch(e){ console.error(e); }
+          try{
+            const e = state.events.find(x=>x.id===btn.dataset.id);
+            if(e && e.photoURL) deleteObject(storageRef(storage, e.photoURL)).catch(()=>{});
+            await deleteEventRemote(btn.dataset.id);
+          } catch(e){ console.error(e); }
         } else {
           btn.dataset.armed = '1';
           btn.textContent = 'Confirm?';
@@ -827,6 +1227,14 @@ const db = getFirestore(firebaseApp);
         }
       });
     });
+  }
+
+  function openLightbox(url){
+    const box = document.createElement('div');
+    box.className = 'fht-lightbox';
+    box.innerHTML = `<img src="${url}" alt="" />`;
+    box.addEventListener('click', ()=> box.remove());
+    document.body.appendChild(box);
   }
 
   function lastNMonths(n){
@@ -903,24 +1311,67 @@ const db = getFirestore(firebaseApp);
       wrap.innerHTML = `<div class="fht-empty" style="padding:14px;">Nothing scheduled right now.</div>`;
       return;
     }
-    wrap.innerHTML = items.map(it=>{
+    wrap.innerHTML = items.map((it,i)=>{
       const member = getMember(it.memberId);
       return `
         <div class="fht-remind-item">
           <span>${esc(it.label)} <span style="color:var(--ink-soft);">— ${esc(member.name)}</span></span>
-          <span class="fht-r-date">${fmtDate(it.date)}</span>
+          <span style="display:flex; align-items:center; gap:8px;">
+            <span class="fht-r-date">${fmtDate(it.date)}</span>
+            <button class="fht-btn-text" data-idx="${i}" title="Add to calendar" style="padding:2px 4px;">+Cal</button>
+          </span>
         </div>
       `;
     }).join('');
+    wrap.querySelectorAll('button[data-idx]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const it = items[+btn.dataset.idx];
+        downloadICS(it.label, it.date, it.sub);
+      });
+    });
+  }
+
+  function downloadICS(title, dateISO, description){
+    const dt = dateISO.replace(/-/g, '');
+    const uid = uidLocal() + '@family-health-record';
+    const stamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+    const escText = (s)=> String(s||'').replace(/[\n]/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+    const ics = [
+      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Family Health Record//EN',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${dt}`,
+      `SUMMARY:${escText(title)}`,
+      description ? `DESCRIPTION:${escText(description)}` : '',
+      'END:VEVENT','END:VCALENDAR'
+    ].filter(Boolean).join('\r\n');
+    const blob = new Blob([ics], { type:'text/calendar' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = title.replace(/[^a-z0-9]+/gi,'-').slice(0,40) + '.ics';
+    a.click();
+    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
   }
 
   /* ---------------- Event modal ---------------- */
-  function openEventModal(existing){
+  function openEventModal(existing, presetType){
     modalDeleteArm = false;
     modalState = existing
-      ? { ...existing }
-      : { id:null, memberId: state.household.members[0].id, type:'illness', title:'', date: todayISO(), detail1:'', detail2:'', notes:'' };
+      ? { ...existing, photoFile: null, removePhoto: false }
+      : { id:null, memberId: state.activeFilter!=='all' ? state.activeFilter : state.household.members[0].id,
+          type: presetType || 'illness', title:'', date: todayISO(), detail1:'', detail2:'', notes:'',
+          photoURL: null, photoFile: null, removePhoto: false };
     renderEventModal();
+  }
+
+  function fieldLabel(key){
+    const cfg = TYPE_CONFIG[modalState.type];
+    if(modalState.type==='growth'){
+      const u = unitSuffix();
+      return key==='d1' ? `Height (${u.h})` : `Weight (${u.w})`;
+    }
+    return cfg[key+'Label'];
   }
 
   function renderEventModal(){
@@ -956,13 +1407,14 @@ const db = getFirestore(firebaseApp);
           <input type="date" id="fht-m-date" value="${modalState.date}" />
         </div>
         <div class="fht-field" id="fht-d1-wrap"></div>
-        <div class="fht-field">
-          <label for="fht-m-d2">${cfg.d2Label}</label>
-          <input type="date" id="fht-m-d2" value="${modalState.detail2||''}" />
-        </div>
+        <div class="fht-field" id="fht-d2-wrap"></div>
         <div class="fht-field">
           <label for="fht-m-notes">Notes</label>
           <textarea id="fht-m-notes" placeholder="Any details worth remembering">${esc(modalState.notes)}</textarea>
+        </div>
+        <div class="fht-field">
+          <label>Photo (optional)</label>
+          <div id="fht-photo-wrap"></div>
         </div>
         <p class="fht-error" id="fht-m-error" style="display:none;"></p>
         <div class="fht-modal-actions">
@@ -973,7 +1425,9 @@ const db = getFirestore(firebaseApp);
       </div>
     `;
     document.body.appendChild(overlay);
-    renderD1Field();
+    renderDetailField('d1');
+    renderDetailField('d2');
+    renderPhotoField();
 
     overlay.querySelectorAll('.fht-type-opt').forEach(btn=>{
       btn.addEventListener('click', ()=>{
@@ -990,13 +1444,13 @@ const db = getFirestore(firebaseApp);
     document.getElementById('fht-m-member').addEventListener('change', e=>{ modalState.memberId = e.target.value; });
     document.getElementById('fht-m-title').addEventListener('input', e=>{ modalState.title = e.target.value; });
     document.getElementById('fht-m-date').addEventListener('input', e=>{ modalState.date = e.target.value; });
-    document.getElementById('fht-m-d2').addEventListener('input', e=>{ modalState.detail2 = e.target.value; });
     document.getElementById('fht-m-notes').addEventListener('input', e=>{ modalState.notes = e.target.value; });
 
     if(modalState.id){
       document.getElementById('fht-m-delete').addEventListener('click', async (e)=>{
         if(modalDeleteArm){
           try{
+            if(modalState.photoURL) deleteObject(storageRef(storage, modalState.photoURL)).catch(()=>{});
             await deleteEventRemote(modalState.id);
             closeModal();
           } catch(err){ console.error(err); }
@@ -1013,50 +1467,112 @@ const db = getFirestore(firebaseApp);
         errEl.style.display = 'block';
         return;
       }
+      const saveBtn = document.getElementById('fht-m-save');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving…';
       const fields = {
         memberId: modalState.memberId,
         type: modalState.type,
         title: modalState.title.trim(),
         date: modalState.date,
         detail1: modalState.detail1 || '',
-        detail2: modalState.detail2 || null,
+        detail2: modalState.detail2 || (modalState.type==='growth' ? '' : null),
         notes: modalState.notes || ''
       };
+      if(modalState.type==='growth'){
+        const units = state.household.measurementUnits;
+        const h = parseFloat(modalState.detail1);
+        const w = parseFloat(modalState.detail2);
+        fields.heightCm = isFinite(h) ? Math.round(toCm(h, units)*10)/10 : null;
+        fields.weightKg = isFinite(w) ? Math.round(toKg(w, units)*100)/100 : null;
+      }
       try{
-        if(modalState.id){
-          await updateEventRemote(modalState.id, fields);
+        let eventId = modalState.id;
+        if(!eventId){
+          const ref = await addEventRemote(fields);
+          eventId = ref.id;
         } else {
-          await addEventRemote(fields);
+          await updateEventRemote(eventId, fields);
+        }
+        if(modalState.removePhoto && modalState.photoURL){
+          deleteObject(storageRef(storage, modalState.photoURL)).catch(()=>{});
+          await updateEventRemote(eventId, { photoURL: null });
+        }
+        if(modalState.photoFile){
+          const path = `households/${state.code}/events/${eventId}/photo-${Date.now()}.jpg`;
+          const ref = storageRef(storage, path);
+          await uploadBytes(ref, modalState.photoFile);
+          const url = await getDownloadURL(ref);
+          await updateEventRemote(eventId, { photoURL: url });
         }
         closeModal();
       } catch(err){
         console.error(err);
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save';
         errEl.textContent = 'Could not save — check your connection and try again.';
         errEl.style.display = 'block';
       }
     });
   }
 
-  function renderD1Field(){
+  function renderDetailField(fieldKey){
     const cfg = TYPE_CONFIG[modalState.type];
-    const wrap = document.getElementById('fht-d1-wrap');
-    if(cfg.d1Type==='select'){
+    const type = cfg[fieldKey+'Type'];
+    const label = fieldLabel(fieldKey);
+    const wrap = document.getElementById(fieldKey==='d1' ? 'fht-d1-wrap' : 'fht-d2-wrap');
+    const value = fieldKey==='d1' ? modalState.detail1 : modalState.detail2;
+    const inputId = fieldKey==='d1' ? 'fht-m-d1' : 'fht-m-d2';
+    if(type==='select'){
       wrap.innerHTML = `
-        <label for="fht-m-d1">${cfg.d1Label}</label>
-        <select id="fht-m-d1">
+        <label for="${inputId}">${label}</label>
+        <select id="${inputId}">
           <option value="">Select…</option>
-          ${cfg.d1Options.map(o=>`<option value="${o}" ${modalState.detail1===o?'selected':''}>${o}</option>`).join('')}
+          ${cfg[fieldKey+'Options'].map(o=>`<option value="${o}" ${value===o?'selected':''}>${o}</option>`).join('')}
         </select>
+      `;
+    } else if(type==='number'){
+      wrap.innerHTML = `
+        <label for="${inputId}">${label}</label>
+        <input type="number" step="0.1" inputmode="decimal" id="${inputId}" value="${esc(value)}" />
+      `;
+    } else if(type==='date'){
+      wrap.innerHTML = `
+        <label for="${inputId}">${label}</label>
+        <input type="date" id="${inputId}" value="${value||''}" />
       `;
     } else {
       wrap.innerHTML = `
-        <label for="fht-m-d1">${cfg.d1Label}</label>
-        <input type="text" id="fht-m-d1" value="${esc(modalState.detail1)}" />
+        <label for="${inputId}">${label}</label>
+        <input type="text" id="${inputId}" value="${esc(value)}" />
       `;
     }
-    document.getElementById('fht-m-d1').addEventListener(cfg.d1Type==='select' ? 'change' : 'input', e=>{
-      modalState.detail1 = e.target.value;
+    document.getElementById(inputId).addEventListener(type==='select' ? 'change' : 'input', e=>{
+      if(fieldKey==='d1') modalState.detail1 = e.target.value; else modalState.detail2 = e.target.value;
     });
+  }
+
+  function renderPhotoField(){
+    const wrap = document.getElementById('fht-photo-wrap');
+    const hasExisting = modalState.photoURL && !modalState.removePhoto;
+    wrap.innerHTML = `
+      ${hasExisting ? `
+        <div class="fht-photo-preview">
+          <img src="${modalState.photoURL}" alt="" />
+          <button type="button" class="fht-btn-text fht-btn-danger" id="fht-photo-remove">Remove photo</button>
+        </div>
+      ` : `<input type="file" accept="image/*" id="fht-photo-input" />`}
+    `;
+    if(hasExisting){
+      document.getElementById('fht-photo-remove').addEventListener('click', ()=>{
+        modalState.removePhoto = true;
+        renderPhotoField();
+      });
+    } else {
+      document.getElementById('fht-photo-input').addEventListener('change', e=>{
+        modalState.photoFile = e.target.files[0] || null;
+      });
+    }
   }
 
   function closeModal(){
@@ -1067,8 +1583,17 @@ const db = getFirestore(firebaseApp);
   }
 
   /* ---------------- People modal ---------------- */
+  const CARE_FIELDS = [
+    ['pediatrician','Pediatrician name'], ['pediatricianPhone','Pediatrician phone'],
+    ['insurance','Insurance provider'], ['insuranceId','Insurance member ID'],
+    ['pharmacy','Pharmacy'], ['pharmacyPhone','Pharmacy phone']
+  ];
+
   function openPeopleModal(){
-    peopleDraft = { members: state.household.members.map(m=>({...m})) };
+    peopleDraft = {
+      measurementUnits: state.household.measurementUnits,
+      members: state.household.members.map(m=>({ ...m, care: { ...(m.care||{}) } }))
+    };
     renderPeopleModal();
   }
 
@@ -1078,7 +1603,14 @@ const db = getFirestore(firebaseApp);
     overlay.id = 'fht-people-overlay';
     overlay.innerHTML = `
       <div class="fht-modal">
-        <h2>People</h2>
+        <h2>People &amp; care</h2>
+        <div class="fht-field">
+          <label for="fht-units">Measurement units (for growth tracking)</label>
+          <select id="fht-units">
+            <option value="imperial" ${peopleDraft.measurementUnits==='imperial'?'selected':''}>Imperial (in / lb)</option>
+            <option value="metric" ${peopleDraft.measurementUnits==='metric'?'selected':''}>Metric (cm / kg)</option>
+          </select>
+        </div>
         <div class="fht-people-list" id="fht-people-list"></div>
         <button class="fht-btn-text" id="fht-people-add" type="button">+ Add person</button>
         <p class="fht-error" id="fht-people-error" style="display:none;"></p>
@@ -1089,15 +1621,30 @@ const db = getFirestore(firebaseApp);
       </div>
     `;
     document.body.appendChild(overlay);
+    document.getElementById('fht-units').addEventListener('change', e=>{ peopleDraft.measurementUnits = e.target.value; });
 
     function renderRows(){
       document.getElementById('fht-people-list').innerHTML = peopleDraft.members.map((m,i)=>`
-        <div class="fht-people-row">
-          <div class="fht-swatch-row">
-            ${PALETTE.map(c=>`<button type="button" class="fht-swatch ${m.color===c?'selected':''}" style="background:${c}" data-color="${c}" data-idx="${i}"></button>`).join('')}
+        <div class="fht-people-block">
+          <div class="fht-people-row">
+            <div class="fht-swatch-row">
+              ${PALETTE.map(c=>`<button type="button" class="fht-swatch ${m.color===c?'selected':''}" style="background:${c}" data-color="${c}" data-idx="${i}"></button>`).join('')}
+            </div>
+            <input type="text" class="fht-people-name" data-idx="${i}" value="${esc(m.name)}" />
+            ${peopleDraft.members.length>1 ? `<button type="button" class="fht-remove-row" data-idx="${i}">&times;</button>` : ''}
           </div>
-          <input type="text" class="fht-people-name" data-idx="${i}" value="${esc(m.name)}" />
-          ${peopleDraft.members.length>1 ? `<button type="button" class="fht-remove-row" data-idx="${i}">&times;</button>` : ''}
+          <div class="fht-birthdate-row">
+            <label for="fht-bd-${i}">Birthdate</label>
+            <input type="date" id="fht-bd-${i}" data-idx="${i}" class="fht-people-bd" value="${m.birthdate||''}" />
+          </div>
+          <button type="button" class="fht-care-toggle" data-idx="${i}">${m._careOpen ? 'Hide care info ▲' : 'Care & insurance info ▾'}</button>
+          ${m._careOpen ? `
+            <div class="fht-care-grid">
+              ${CARE_FIELDS.map(([key,label])=>`
+                <input type="text" placeholder="${label}" data-idx="${i}" data-key="${key}" class="fht-care-field" value="${esc(m.care[key]||'')}" />
+              `).join('')}
+            </div>
+          ` : ''}
         </div>
       `).join('');
       document.querySelectorAll('.fht-people-row .fht-swatch').forEach(sw=>{
@@ -1105,6 +1652,21 @@ const db = getFirestore(firebaseApp);
       });
       document.querySelectorAll('.fht-people-name').forEach(inp=>{
         inp.addEventListener('input', e=>{ peopleDraft.members[+e.target.dataset.idx].name = e.target.value; });
+      });
+      document.querySelectorAll('.fht-people-bd').forEach(inp=>{
+        inp.addEventListener('change', e=>{ peopleDraft.members[+e.target.dataset.idx].birthdate = e.target.value || null; });
+      });
+      document.querySelectorAll('.fht-care-toggle').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const m = peopleDraft.members[+e.target.dataset.idx];
+          m._careOpen = !m._careOpen;
+          renderRows();
+        });
+      });
+      document.querySelectorAll('.fht-care-field').forEach(inp=>{
+        inp.addEventListener('input', e=>{
+          peopleDraft.members[+e.target.dataset.idx].care[e.target.dataset.key] = e.target.value;
+        });
       });
       document.querySelectorAll('.fht-people-row .fht-remove-row').forEach(btn=>{
         btn.addEventListener('click', e=>{ peopleDraft.members.splice(+e.target.dataset.idx,1); renderRows(); });
@@ -1116,7 +1678,7 @@ const db = getFirestore(firebaseApp);
     document.getElementById('fht-people-cancel').addEventListener('click', closePeopleModal);
     document.getElementById('fht-people-add').addEventListener('click', ()=>{
       if(peopleDraft.members.length>=8) return;
-      peopleDraft.members.push({ id: uidLocal(), name:'', color: PALETTE[peopleDraft.members.length % PALETTE.length] });
+      peopleDraft.members.push({ id: uidLocal(), name:'', color: PALETTE[peopleDraft.members.length % PALETTE.length], birthdate:null, care:{} });
       renderRows();
     });
     document.getElementById('fht-people-save').addEventListener('click', async ()=>{
@@ -1126,7 +1688,11 @@ const db = getFirestore(firebaseApp);
         errEl.style.display = 'block';
         return;
       }
-      state.household.members = peopleDraft.members.map(m=>({ ...m, name: m.name.trim() }));
+      state.household.measurementUnits = peopleDraft.measurementUnits;
+      state.household.members = peopleDraft.members.map(m=>{
+        const { _careOpen, ...clean } = m;
+        return { ...clean, name: m.name.trim() };
+      });
       try{
         await saveHouseholdRemote();
         closePeopleModal();
@@ -1165,6 +1731,12 @@ const db = getFirestore(firebaseApp);
     }
   }
   init();
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline shell is a bonus, not required */ });
+    });
+  }
 })();
 </script>
 </body>
